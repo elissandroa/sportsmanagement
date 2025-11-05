@@ -1,0 +1,181 @@
+// FUNÇÕES DE EXPORTAÇÃO DE PDF - VERSÃO CORRIGIDA
+
+  // Função para exportar dados do atleta em PDF
+  const exportAthleteDataToPDF = (athlete: any) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    
+    // Adicionar cabeçalho
+    let yPosition = addHopeHeader(doc, pageWidth, 'FICHA COMPLETA DO ATLETA');
+
+    // Função auxiliar para verificar quebra de página
+    const checkBreak = (space: number) => {
+      const result = checkPageBreak(doc, yPosition, space, pageHeight, margin);
+      yPosition = result.newY;
+    };
+
+    // Função auxiliar para adicionar texto
+    const addLine = (text: string, size: number = 10, bold: boolean = false) => {
+      yPosition = addTextLine(doc, text, yPosition, margin, size, bold);
+    };
+
+    // DADOS PESSOAIS
+    yPosition = addSectionTitle(doc, 'DADOS PESSOAIS', yPosition, margin);
+    addLine(`Nome: ${athlete.name}`, 11, true);
+    addLine(`Idade: ${athlete.age} anos`);
+    addLine(`Posição: ${athlete.position}`);
+    addLine(`Perna Dominante: ${athlete.preferredFoot}`);
+    addLine(`Categoria: ${athlete.category}`);
+    addLine(`Número da Camisa: ${athlete.jerseyNumber || 'N/A'}`);
+    
+    if (athlete.positions && athlete.positions.length > 0) {
+      addLine(`Posições que atua: ${athlete.positions.join(', ')}`);
+    }
+    yPosition += 5;
+
+    // DOCUMENTOS
+    checkBreak(40);
+    yPosition = addSectionTitle(doc, 'DOCUMENTOS', yPosition, margin);
+    addLine(`CPF: ${athlete.cpf || 'Não informado'}`);
+    addLine(`RG: ${athlete.rg || 'Não informado'}`);
+    addLine(`Passaporte: ${athlete.passport || 'Não informado'}`);
+    addLine(`BID CBF: ${athlete.bidCBF || 'Não informado'}`);
+    yPosition += 5;
+
+    // CONTATO
+    checkBreak(30);
+    yPosition = addSectionTitle(doc, 'CONTATO', yPosition, margin);
+    addLine(`Telefone: ${athlete.phone || 'Não informado'}`);
+    
+    if (athlete.address) {
+      addLine(`Endereço: ${athlete.address.street}, ${athlete.address.number}`);
+      if (athlete.address.complement) {
+        addLine(`Complemento: ${athlete.address.complement}`);
+      }
+      addLine(`${athlete.address.neighborhood} - ${athlete.address.city}/${athlete.address.state}`);
+      addLine(`CEP: ${athlete.address.zipCode || 'N/A'}`);
+    }
+    yPosition += 5;
+
+    // ESTATÍSTICAS
+    checkBreak(50);
+    yPosition = addSectionTitle(doc, 'ESTATÍSTICAS DA TEMPORADA', yPosition, margin);
+    addLine(`Partidas Disputadas: ${athlete.matches}`);
+    addLine(`Minutos em Campo: ${athlete.minutes}`);
+    addLine(`Gols Marcados: ${athlete.goals}`);
+    addLine(`Assistências: ${athlete.assists}`);
+    addLine(`Cartões Amarelos: ${athlete.yellowCards}`);
+    addLine(`Cartões Vermelhos: ${athlete.redCards}`);
+    yPosition += 5;
+
+    // HISTÓRICO DE LESÕES
+    checkBreak(40);
+    yPosition = addSectionTitle(doc, 'HISTÓRICO DE LESÕES', yPosition, margin);
+    
+    const mockInjuries = athlete.status === 'Lesionado' ? [
+      {
+        type: 'Lesão Muscular',
+        specificType: 'Estiramento na coxa direita',
+        severity: 'Moderada',
+        date: '2024-10-08',
+        expectedReturn: '2024-10-28',
+        status: 'Em Recuperação',
+        doctor: 'Dr. Carlos Mendes'
+      }
+    ] : [
+      {
+        type: 'Lesão Muscular',
+        specificType: 'Estiramento posterior da coxa',
+        severity: 'Leve',
+        date: '2024-08-15',
+        actualReturn: '2024-08-24',
+        status: 'Recuperado',
+        doctor: 'Dr. Carlos Mendes'
+      },
+      {
+        type: 'Entorse',
+        specificType: 'Entorse de tornozelo esquerdo',
+        severity: 'Moderada',
+        date: '2024-06-10',
+        actualReturn: '2024-06-30',
+        status: 'Recuperado',
+        doctor: 'Dr. Carlos Mendes'
+      }
+    ];
+
+    if (mockInjuries.length > 0) {
+      mockInjuries.forEach((injury: any, index: number) => {
+        checkBreak(35);
+        addLine(`${index + 1}. ${injury.type} - ${injury.specificType}`, 10, true);
+        addLine(`   Gravidade: ${injury.severity} | Status: ${injury.status}`, 9);
+        addLine(`   Data: ${new Date(injury.date).toLocaleDateString('pt-BR')}`, 9);
+        if (injury.actualReturn) {
+          addLine(`   Retorno: ${new Date(injury.actualReturn).toLocaleDateString('pt-BR')}`, 9);
+        } else if (injury.expectedReturn) {
+          addLine(`   Retorno Previsto: ${new Date(injury.expectedReturn).toLocaleDateString('pt-BR')}`, 9);
+        }
+        addLine(`   Médico: ${injury.doctor}`, 9);
+        yPosition += 3;
+      });
+    } else {
+      addLine('Sem lesões registradas');
+    }
+    yPosition += 5;
+
+    // HISTÓRICO PROFISSIONAL
+    checkBreak(40);
+    yPosition = addSectionTitle(doc, 'HISTÓRICO PROFISSIONAL', yPosition, margin);
+    addLine(`Data de Entrada no Clube: ${new Date(athlete.joinDate).toLocaleDateString('pt-BR')}`);
+    
+    if (athlete.previousClubs && athlete.previousClubs.length > 0) {
+      addLine('Clubes Anteriores:', 10, true);
+      athlete.previousClubs.forEach((club: string) => {
+        addLine(`  • ${club}`, 9);
+      });
+    } else {
+      addLine('Clube de origem');
+    }
+    yPosition += 5;
+
+    // DADOS CONTRATUAIS (apenas para presidente)
+    if (canAccessSensitiveData) {
+      checkBreak(60);
+      yPosition = addSectionTitle(doc, 'DADOS CONTRATUAIS (CONFIDENCIAL)', yPosition, margin, '#cc0000');
+      
+      if (athlete.contractType === 'professional' && athlete.professionalContract?.hasContract) {
+        addLine('Contrato Profissional', 11, true);
+        addLine(`Valor Mensal: R$ ${athlete.professionalContract.value?.toLocaleString('pt-BR')}`);
+        addLine(`Duração: ${athlete.professionalContract.duration}`);
+        addLine(`Início: ${new Date(athlete.professionalContract.startDate).toLocaleDateString('pt-BR')}`);
+        addLine(`Término: ${new Date(athlete.professionalContract.endDate).toLocaleDateString('pt-BR')}`);
+      } else if (athlete.contractType === 'base_with_contract' && athlete.baseContract?.hasContract) {
+        addLine('Contrato de Base', 11, true);
+        addLine(`Valor Mensal: R$ ${athlete.baseContract.value?.toLocaleString('pt-BR')}`);
+        addLine(`Duração: ${athlete.baseContract.duration}`);
+        addLine(`Início: ${new Date(athlete.baseContract.startDate).toLocaleDateString('pt-BR')}`);
+        addLine(`Término: ${new Date(athlete.baseContract.endDate).toLocaleDateString('pt-BR')}`);
+      } else if (athlete.contractType === 'formation' && athlete.formationContract?.hasContract) {
+        addLine('Contrato de Formação', 11, true);
+        addLine(`Tem Ajuda de Custo: ${athlete.formationContract.hasAllowance ? 'Sim' : 'Não'}`);
+        if (athlete.formationContract.hasAllowance) {
+          addLine(`Valor da Ajuda: R$ ${athlete.formationContract.allowanceValue?.toLocaleString('pt-BR')}`);
+        }
+        addLine(`Duração: ${athlete.formationContract.duration}`);
+        addLine(`Início: ${new Date(athlete.formationContract.startDate).toLocaleDateString('pt-BR')}`);
+        addLine(`Término: ${new Date(athlete.formationContract.endDate).toLocaleDateString('pt-BR')}`);
+      } else {
+        addLine('Sem contrato registrado');
+      }
+    }
+
+    // Rodapé
+    addHopeFooter(doc, pageWidth, pageHeight);
+
+    // Salvar PDF
+    const fileName = `Hope_${athlete.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+    
+    toast.success('PDF exportado com sucesso!');
+  };

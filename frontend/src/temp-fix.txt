@@ -1,0 +1,5 @@
+As linhas 1031-1061 do arquivo ContractManagement.tsx contêm aspas com escapes incorretos (\\") 
+que precisam ser removidas ou substituídas por aspas simples (")
+
+O erro está em: variant=\\\"outline\\\"
+Deve ser: variant="outline"
