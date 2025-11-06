@@ -20,8 +20,6 @@ public class AthleteDTO implements Serializable {
 	private String preferredFoot;
 	private boolean isActive;
 	private String phoneNumber;
-	private Long addressId;
-	private Long personalDocumentsId;
 	
 	private AddressAthleteDTO address;
 	
@@ -61,11 +59,18 @@ public class AthleteDTO implements Serializable {
 		this.preferredFoot = entity.getPreferredFoot();
 		this.isActive = entity.isActive();
 		this.phoneNumber = entity.getPhoneNumber();
-		this.addressId = entity.getAddress() != null ? entity.getAddress().getId() : null;
-		this.personalDocumentsId = entity.getPersonalDocuments() != null ? entity.getPersonalDocuments().getId() : null;
-		entity.getCategories().forEach(cat -> this.categories.add(new CategoryDTO(cat)));
-		entity.getPlayerPositions().forEach(pos -> this.playerPositions.add(new PlayerPositionDTO(pos)));
-		entity.getContracts().forEach(cont -> this.contracts.add(new ContractDTO(cont)));
+		this.address = new AddressAthleteDTO(entity.getAddress());
+		this.personalDocuments = new PersonalDocumentsDTO(entity.getPersonalDocuments());
+		for (var cat : entity.getCategories()) {
+			this.categories.add(new CategoryDTO(cat));
+		}
+		for (var pos : entity.getPlayerPositions()) {
+			this.playerPositions.add(new PlayerPositionDTO(pos));
+		}
+		for (var cont : entity.getContracts()) {
+			this.contracts.add(new ContractDTO(cont));
+		}
+		
 	}
 
 	public Long getId() {
@@ -176,19 +181,5 @@ public class AthleteDTO implements Serializable {
 		return contracts;
 	}
 
-	public Long getAddressId() {
-		return addressId;
-	}
 
-	public void setAddressId(Long addressId) {
-		this.addressId = addressId;
-	}
-
-	public Long getPersonalDocumentsId() {
-		return personalDocumentsId;
-	}
-
-	public void setPersonalDocumentsId(Long personalDocumentsId) {
-		this.personalDocumentsId = personalDocumentsId;
-	}
 }

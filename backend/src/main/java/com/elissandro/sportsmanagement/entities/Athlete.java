@@ -39,7 +39,7 @@ public class Athlete implements Serializable {
 	private AddressAthlete address;
 	
 	@ManyToMany
-	@JoinTable(name = "athlete_category",
+	@JoinTable(name = "tb_athlete_category",
 		joinColumns = @JoinColumn(name = "athlete_id"),
 		inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
@@ -48,13 +48,13 @@ public class Athlete implements Serializable {
 	private PersonalDocuments personalDocuments;
 	
 	@ManyToMany
-	@JoinTable(name = "athlete_player_position",
+	@JoinTable(name = "tb_athlete_player_position",
 		joinColumns = @JoinColumn(name = "athlete_id"),
 		inverseJoinColumns = @JoinColumn(name = "player_position_id"))
 	private Set<PlayerPosition> playerPositions = new HashSet<>();
 	
 	@ManyToMany
-	@JoinTable(name = "athlete_contract",
+	@JoinTable(name = "tb_athlete_contract",
 		joinColumns = @JoinColumn(name = "athlete_id"),
 		inverseJoinColumns = @JoinColumn(name = "contract_id"))
 	private Set<Contract> contracts = new HashSet<>();
