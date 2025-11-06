@@ -20,7 +20,7 @@ public class AddressAthlete implements Serializable {
 	private String street;
 	private String localNumber;
 	private String complement;
-	private String ZipCode;
+	private String zipCode;
 	private String neighborhood;
 	private String city;
 	private String state;
@@ -35,7 +35,7 @@ public class AddressAthlete implements Serializable {
 		this.street = street;
 		this.localNumber = localNumber;
 		this.complement = complement;
-		ZipCode = zipCode;
+		this.zipCode = zipCode;
 		this.neighborhood = neighborhood;
 		this.city = city;
 		this.state = state;
@@ -75,11 +75,11 @@ public class AddressAthlete implements Serializable {
 	}
 
 	public String getZipCode() {
-		return ZipCode;
+		return zipCode;
 	}
 
 	public void setZipCode(String zipCode) {
-		ZipCode = zipCode;
+		this.zipCode = zipCode;
 	}
 
 	public String getNeighborhood() {

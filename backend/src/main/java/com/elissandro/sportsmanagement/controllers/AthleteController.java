@@ -1,8 +1,8 @@
 package com.elissandro.sportsmanagement.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.elissandro.sportsmanagement.dtos.AddressAthleteDTO;
-import com.elissandro.sportsmanagement.services.AddressAthelteService;
+import com.elissandro.sportsmanagement.dtos.AthleteDTO;
+import com.elissandro.sportsmanagement.services.AthleteService;
 
 @RestController
-@RequestMapping("/address-athletes")
-public class AddressAthleteController {
+@RequestMapping("/athletes")
+public class AthleteController {
 	
 	@Autowired
-	private AddressAthelteService service;
+	private AthleteService service;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<AddressAthleteDTO> findById(@PathVariable Long id) {
-		AddressAthleteDTO dto = service.findById(id);
+	public ResponseEntity<AthleteDTO> findById(@PathVariable Long id) {
+		AthleteDTO dto = service.findById(id);
 		return ResponseEntity.ok(dto);
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<AddressAthleteDTO>> findAll() {
-		List<AddressAthleteDTO> list = service.findAll();
-		return ResponseEntity.ok(list);
+	public ResponseEntity<Page<AthleteDTO>> findAll(Pageable pageable) {
+		Page<AthleteDTO> page = service.findAll(pageable);
+		return ResponseEntity.ok(page);
 	}
 	
 	@PostMapping
-	public ResponseEntity<AddressAthleteDTO> insert(@RequestBody AddressAthleteDTO dto) {
-		AddressAthleteDTO createdDto = service.insert(dto);
+	public ResponseEntity<AthleteDTO> insert(@RequestBody AthleteDTO dto) {
+		AthleteDTO createdDto = service.insert(dto);
 		return ResponseEntity.ok(createdDto);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<AddressAthleteDTO> update(@PathVariable Long id, @RequestBody AddressAthleteDTO dto) {
-		AddressAthleteDTO updatedDto = service.update(id, dto);
+	public ResponseEntity<AthleteDTO> update(@PathVariable Long id, @RequestBody AthleteDTO dto) {
+		AthleteDTO updatedDto = service.update(id, dto);
 		return ResponseEntity.ok(updatedDto);
 	}
 	

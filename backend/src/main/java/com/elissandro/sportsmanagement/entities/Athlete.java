@@ -1,0 +1,207 @@
+package com.elissandro.sportsmanagement.entities;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_athlete")
+public class Athlete implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String name;
+	private String photo;
+	private LocalDate birthDate;
+	private int jerseyNumber;
+	private Double height;
+	private Double weight;
+	private String preferredFoot;
+	private boolean isActive;
+	private String phoneNumber;	
+		
+	@OneToOne(cascade = CascadeType.ALL)
+	private AddressAthlete address;
+	
+	@ManyToMany
+	@JoinTable(name = "athlete_category",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Set<Category> categories = new HashSet<>();
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private PersonalDocuments personalDocuments;
+	
+	@ManyToMany
+	@JoinTable(name = "athlete_player_position",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "player_position_id"))
+	private Set<PlayerPosition> playerPositions = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(name = "athlete_contract",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "contract_id"))
+	private Set<Contract> contracts = new HashSet<>();
+	
+	public Athlete() {
+	}
+	
+	public Athlete(Long id, String name, String photo, LocalDate birthDate, int jerseyNumber, Double height,
+			Double weight, String preferredFoot, boolean isActive, String phoneNumber, AddressAthlete address,
+			PersonalDocuments personalDocuments) {
+		this.id = id;
+		this.name = name;
+		this.photo = photo;
+		this.birthDate = birthDate;
+		this.jerseyNumber = jerseyNumber;
+		this.height = height;
+		this.weight = weight;
+		this.preferredFoot = preferredFoot;
+		this.isActive = isActive;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
+		this.personalDocuments = personalDocuments;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public int getJerseyNumber() {
+		return jerseyNumber;
+	}
+
+	public void setJerseyNumber(int jerseyNumber) {
+		this.jerseyNumber = jerseyNumber;
+	}
+
+	public Double getHeight() {
+		return height;
+	}
+
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+
+	public String getPreferredFoot() {
+		return preferredFoot;
+	}
+
+	public void setPreferredFoot(String preferredFoot) {
+		this.preferredFoot = preferredFoot;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public AddressAthlete getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressAthlete address) {
+		this.address = address;
+	}
+
+	public PersonalDocuments getPersonalDocuments() {
+		return personalDocuments;
+	}
+
+	public void setPersonalDocuments(PersonalDocuments personalDocuments) {
+		this.personalDocuments = personalDocuments;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public Set<PlayerPosition> getPlayerPositions() {
+		return playerPositions;
+	}
+
+	public Set<Contract> getContracts() {
+		return contracts;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Athlete other = (Athlete) obj;
+		return Objects.equals(id, other.id);
+	}
+
+}

@@ -13,7 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_contracts")
+@Table(name = "tb_contract")
 public class Contract implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
