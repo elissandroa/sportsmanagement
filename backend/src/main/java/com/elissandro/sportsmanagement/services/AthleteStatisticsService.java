@@ -47,6 +47,9 @@ public class AthleteStatisticsService {
 	}
 	
 	private void copyDtoToEntity(AthleteStatisticsDTO dto, AthleteStatistics entity) {
+		if(dto.getId() != null) {
+			entity.setId(dto.getId());
+		}
 		entity.setMatchesPlayed(dto.getMatchesPlayed());
 		entity.setMinutesPlayed(dto.getMinutesPlayed());
 		entity.setGoalsScored(dto.getGoalsScored());

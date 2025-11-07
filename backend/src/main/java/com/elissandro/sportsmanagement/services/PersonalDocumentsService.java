@@ -47,6 +47,9 @@ public class PersonalDocumentsService {
 	}
 	
 	private void copyDtoToEntity(PersonalDocumentsDTO dto, PersonalDocuments entity) {
+		if(dto.getId() != null) {
+			entity.setId(dto.getId());
+		}
 		entity.setCpf(dto.getCpf());
 		entity.setRg(dto.getRg());
 		entity.setRg(dto.getRg());

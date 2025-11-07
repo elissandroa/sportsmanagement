@@ -47,6 +47,9 @@ public class ContractService {
 	}
 	
 	private void copyDtoToEntity(ContractDTO dto, Contract entity) {
+		if(dto.getId() != null) {
+			entity.setId(dto.getId());
+		}
 		entity.setHasContract(dto.getHasContract());
 		entity.setSalary(dto.getSalary());
 		entity.setDuration(dto.getDuration());

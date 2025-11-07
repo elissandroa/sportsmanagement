@@ -47,6 +47,9 @@ public class AddressAthelteService {
 	}
 	
 	private void copyDtoToEntity(AddressAthleteDTO dto, AddressAthlete entity) {
+		if(dto.getId() != null) {
+			entity.setId(dto.getId());
+		}
 		entity.setStreet(dto.getStreet());
 		entity.setLocalNumber(dto.getLocalNumber());
 		entity.setComplement(dto.getComplement());
