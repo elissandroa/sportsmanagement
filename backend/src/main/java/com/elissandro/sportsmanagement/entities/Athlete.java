@@ -59,6 +59,9 @@ public class Athlete implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "contract_id"))
 	private Set<Contract> contracts = new HashSet<>();
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private AthleteStatistics athleteStatistics;
+	
 	public Athlete() {
 	}
 	
@@ -185,6 +188,14 @@ public class Athlete implements Serializable {
 
 	public Set<Contract> getContracts() {
 		return contracts;
+	}
+
+	public AthleteStatistics getAthleteStatistics() {
+		return athleteStatistics;
+	}
+
+	public void setAthleteStatistics(AthleteStatistics athleteStatistics) {
+		this.athleteStatistics = athleteStatistics;
 	}
 
 	@Override
