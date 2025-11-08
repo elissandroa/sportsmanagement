@@ -28,6 +28,7 @@ public class Athlete implements Serializable {
 	private Long id;
 	private String name;
 	private String photo;
+	private String position;
 	private LocalDate birthDate;
 	private int jerseyNumber;
 	private Double height;
@@ -66,12 +67,13 @@ public class Athlete implements Serializable {
 	public Athlete() {
 	}
 	
-	public Athlete(Long id, String name, String photo, LocalDate birthDate, int jerseyNumber, Double height,
+	public Athlete(Long id, String name, String photo, String position, LocalDate birthDate, int jerseyNumber, Double height,
 			Double weight, String preferredFoot, boolean isActive, String phoneNumber, AddressAthlete address,
 			PersonalDocuments personalDocuments) {
 		this.id = id;
 		this.name = name;
 		this.photo = photo;
+		this.position = position;
 		this.birthDate = birthDate;
 		this.jerseyNumber = jerseyNumber;
 		this.height = height;
@@ -214,6 +216,14 @@ public class Athlete implements Serializable {
 			return false;
 		Athlete other = (Athlete) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 }

@@ -13,6 +13,7 @@ public class AthleteDTO implements Serializable {
 	private Long id;
 	private String name;
 	private String photo;
+	private String position;
 	private LocalDate birthDate;
 	private int jerseyNumber;
 	private Double height;
@@ -36,11 +37,12 @@ public class AthleteDTO implements Serializable {
 	public AthleteDTO() {
 	}
 	
-	public AthleteDTO(Long id, String name, String photo, LocalDate birthDate, int jerseyNumber, Double height,
+	public AthleteDTO(Long id, String name, String photo, String position, LocalDate birthDate, int jerseyNumber, Double height,
 			Double weight, String preferredFoot, boolean isActive, String phoneNumber) {
 		this.id = id;
 		this.name = name;
 		this.photo = photo;
+		this.position = position;
 		this.birthDate = birthDate;
 		this.jerseyNumber = jerseyNumber;
 		this.height = height;
@@ -54,6 +56,7 @@ public class AthleteDTO implements Serializable {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.photo = entity.getPhoto();
+		this.position = entity.getPosition();
 		this.birthDate = entity.getBirthDate();
 		this.jerseyNumber = entity.getJerseyNumber();
 		this.height = entity.getHeight();
@@ -190,6 +193,14 @@ public class AthleteDTO implements Serializable {
 
 	public void setAthleteStatistics(AthleteStatisticsDTO athleteStatistics) {
 		this.athleteStatistics = athleteStatistics;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 

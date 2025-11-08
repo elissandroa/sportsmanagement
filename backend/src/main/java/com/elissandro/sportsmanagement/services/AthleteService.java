@@ -116,6 +116,7 @@ public class AthleteService {
 
 		entity.setName(dto.getName());
 		entity.setPhoto(dto.getPhoto());
+		entity.setPosition(dto.getPosition());
 		entity.setBirthDate(dto.getBirthDate());
 		entity.setJerseyNumber(dto.getJerseyNumber());
 		entity.setHeight(dto.getHeight());
