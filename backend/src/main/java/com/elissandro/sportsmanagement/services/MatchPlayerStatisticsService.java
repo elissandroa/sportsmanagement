@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.MatchPlayerStatisticsDTO;
-import com.elissandro.sportsmanagement.entities.Athlete;
 import com.elissandro.sportsmanagement.entities.MatchPlayerStatistics;
 import com.elissandro.sportsmanagement.repositories.AthleteRepository;
 import com.elissandro.sportsmanagement.repositories.MatchPlayerStatisticsRepository;
