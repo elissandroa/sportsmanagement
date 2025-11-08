@@ -8,6 +8,7 @@ import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,7 +39,7 @@ public class Athlete implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private AddressAthlete address;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_athlete_category",
 		joinColumns = @JoinColumn(name = "athlete_id"),
 		inverseJoinColumns = @JoinColumn(name = "category_id"))

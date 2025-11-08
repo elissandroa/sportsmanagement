@@ -1,12 +1,15 @@
 package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,6 +21,15 @@ public class Category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	String name;
+	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Competition> competitions = new HashSet<>();
+	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Opponent> opponents = new HashSet<>();
+	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Athlete> athletes = new HashSet<>();
 	
 	public Category() {
 		

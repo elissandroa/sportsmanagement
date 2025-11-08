@@ -1,10 +1,13 @@
 package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import com.elissandro.sportsmanagement.enums.CompetitionType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,39 +20,47 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_opponent")
-public class Opponent implements Serializable {
+@Table(name = "tb_competition")
+public class Competition implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String city;
-	private String state;
-	private String stadium;
-	private String logoUrl;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_opponent_category",
-		joinColumns = @JoinColumn(name = "opponent_id"),
+	@JoinTable(name = "tb_competition_category",
+		joinColumns = @JoinColumn(name = "competition_id"),
 		inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
-	public Opponent() {
+	private CompetitionType type;
+	private String regulations;
+	private Boolean active;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	
+	@ManyToMany
+	@JoinTable(name = "tb_competition_match",
+		joinColumns = @JoinColumn(name = "competition_id"),
+		inverseJoinColumns = @JoinColumn(name = "match_id"))
+	private Set<Match> matches = new HashSet<>();
+	
+	public Competition() {
 	}
 	
-	public Opponent(Long id, String name, String city, String state, String stadium, String logoUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public Competition(Long id, String name, LocalDate startDate, LocalDate endDate, CompetitionType type,
+			String regulations, Boolean active) {
 		this.id = id;
 		this.name = name;
-		this.city = city;
-		this.state = state;
-		this.stadium = stadium;
-		this.logoUrl = logoUrl;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.type = type;
+		this.regulations = regulations;
+		this.active = active;
 	}
 
 	public Long getId() {
@@ -68,37 +79,44 @@ public class Opponent implements Serializable {
 		this.name = name;
 	}
 
-
-	public String getCity() {
-		return city;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	public String getState() {
-		return state;
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 
-	public String getStadium() {
-		return stadium;
+	public CompetitionType getType() {
+		return type;
 	}
 
-	public void setStadium(String stadium) {
-		this.stadium = stadium;
+	public void setType(CompetitionType type) {
+		this.type = type;
 	}
 
-	public String getLogoUrl() {
-		return logoUrl;
+	public String getRegulations() {
+		return regulations;
 	}
 
-	public void setLogoUrl(String logoUrl) {
-		this.logoUrl = logoUrl;
+	public void setRegulations(String regulations) {
+		this.regulations = regulations;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -121,6 +139,10 @@ public class Opponent implements Serializable {
 		return categories;
 	}
 
+	public Set<Match> getMatches() {
+		return matches;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -134,7 +156,7 @@ public class Opponent implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Opponent other = (Opponent) obj;
+		Competition other = (Competition) obj;
 		return Objects.equals(id, other.id);
 	}
 
