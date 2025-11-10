@@ -49,7 +49,7 @@ public class Athlete implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private PersonalDocuments personalDocuments;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_athlete_player_position",
 		joinColumns = @JoinColumn(name = "athlete_id"),
 		inverseJoinColumns = @JoinColumn(name = "player_position_id"))

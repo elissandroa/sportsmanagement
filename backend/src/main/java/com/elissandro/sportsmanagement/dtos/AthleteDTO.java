@@ -67,6 +67,7 @@ public class AthleteDTO implements Serializable {
 		this.address = new AddressAthleteDTO(entity.getAddress());
 		this.personalDocuments = new PersonalDocumentsDTO(entity.getPersonalDocuments());
 		this.athleteStatistics = new AthleteStatisticsDTO(entity.getAthleteStatistics());
+		
 		for (var cat : entity.getCategories()) {
 			this.categories.add(new CategoryDTO(cat));
 		}
