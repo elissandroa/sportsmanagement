@@ -1,5 +1,6 @@
 package com.elissandro.sportsmanagement.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,18 @@ import com.elissandro.sportsmanagement.entities.Athlete;
 import com.elissandro.sportsmanagement.entities.AthleteStatistics;
 import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Contract;
+import com.elissandro.sportsmanagement.entities.MedicalRecord;
 import com.elissandro.sportsmanagement.entities.PersonalDocuments;
 import com.elissandro.sportsmanagement.entities.PlayerPosition;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionEffort;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionRecovery;
+import com.elissandro.sportsmanagement.enums.InjuryStatus;
 import com.elissandro.sportsmanagement.repositories.AddressAthleteRepository;
 import com.elissandro.sportsmanagement.repositories.AnthropometricDataRepository;
 import com.elissandro.sportsmanagement.repositories.AthleteRepository;
 import com.elissandro.sportsmanagement.repositories.AthleteStatisticsRepository;
 import com.elissandro.sportsmanagement.repositories.ContractRepository;
+import com.elissandro.sportsmanagement.repositories.MedicalRecordRepository;
 import com.elissandro.sportsmanagement.repositories.PersonalDocumentsRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionEffortRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionRecoveryRepository;
@@ -58,6 +62,9 @@ public class AthleteService {
 	
 	@Autowired
 	private SubjectivePerceptionRecoveryRepository subjectivePerceptionRecoveryRepository;
+	
+	@Autowired
+	private MedicalRecordRepository medicalRecordRepository;
 
 	@Transactional(readOnly = true)
 	public AthleteDTO findById(Long id) {
@@ -145,6 +152,38 @@ public class AthleteService {
 		athleteStatistics.setYellowCards(dto.getAthleteStatistics().getYellowCards());
 		athleteStatistics.setLastUpdated(LocalDateTime.now());
 		athleteStatistics = athleteStatisticsRepository.save(athleteStatistics);
+		
+		MedicalRecord medicalRecord = new MedicalRecord();
+		
+		for(var mrDTO : dto.getMedicalRecords()) {
+			if(mrDTO.getId() != null) {
+				medicalRecord.setId(mrDTO.getId());
+			}
+			
+			medicalRecord.setActualReturn(mrDTO.getActualReturn());
+			medicalRecord.setBodyPart(mrDTO.getBodyPart());
+			medicalRecord.setBodyPartCoordinates(mrDTO.getBodyPartCoordinates());
+			if(mrDTO.getCreatedAt() == null) {
+				medicalRecord.setCreatedAt(LocalDate.now());
+			} else {
+				medicalRecord.setUpdatedAt(LocalDate.now());
+			}
+			medicalRecord.setDescription(mrDTO.getDescription());
+			medicalRecord.setExpectedReturn(mrDTO.getExpectedReturn());
+			medicalRecord.setInjuryDate(mrDTO.getInjuryDate());
+			medicalRecord.setSeverity(mrDTO.getSeverity());
+			if(mrDTO.getRemainingDays() == 0) {
+				medicalRecord.setStatus(InjuryStatus.RECOVERED);
+			} else {
+				medicalRecord.setStatus(mrDTO.getStatus());
+			}
+			medicalRecord.setTreatedBy(mrDTO.getTreatedBy());
+			medicalRecord.setTreatment(mrDTO.getTreatment());
+			medicalRecord.setType(mrDTO.getType());			
+			medicalRecord = medicalRecordRepository.save(medicalRecord);
+			
+			entity.getMedicalRecords().add(medicalRecord);
+		}
 		
 		for(var speDTO : dto.getSubjectivePerceptionEfforts()) {
 			SubjectivePerceptionEffort spe = new SubjectivePerceptionEffort();
