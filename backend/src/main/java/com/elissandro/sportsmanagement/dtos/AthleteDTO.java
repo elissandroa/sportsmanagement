@@ -34,6 +34,12 @@ public class AthleteDTO implements Serializable {
 	
 	private AthleteStatisticsDTO athleteStatistics;
 	
+	private List<SubjectivePerceptionRecoveryDTO> subjectivePerceptionRecoveries = new ArrayList<>();
+	
+	private List<SubjectivePerceptionEffortDTO> subjectivePerceptionEfforts = new ArrayList<>();
+	
+	private AnthropometricDataDTO anthropometricData;
+		
 	public AthleteDTO() {
 	}
 	
@@ -67,6 +73,15 @@ public class AthleteDTO implements Serializable {
 		this.address = new AddressAthleteDTO(entity.getAddress());
 		this.personalDocuments = new PersonalDocumentsDTO(entity.getPersonalDocuments());
 		this.athleteStatistics = new AthleteStatisticsDTO(entity.getAthleteStatistics());
+		this.anthropometricData = new AnthropometricDataDTO(entity.getAnthropometricData());
+		
+		for(var spr : entity.getSubjectivePerceptionRecoveries()) {
+			this.subjectivePerceptionRecoveries.add(new SubjectivePerceptionRecoveryDTO(spr));
+		}
+		
+		for(var spe : entity.getSubjectivePerceptionEfforts()) {
+			this.subjectivePerceptionEfforts.add(new SubjectivePerceptionEffortDTO(spe));
+		}
 		
 		for (var cat : entity.getCategories()) {
 			this.categories.add(new CategoryDTO(cat));
@@ -204,5 +219,20 @@ public class AthleteDTO implements Serializable {
 		this.position = position;
 	}
 
+	public List<SubjectivePerceptionRecoveryDTO> getSubjectivePerceptionRecoveries() {
+		return subjectivePerceptionRecoveries;
+	}
+
+	public List<SubjectivePerceptionEffortDTO> getSubjectivePerceptionEfforts() {
+		return subjectivePerceptionEfforts;
+	}
+
+	public AnthropometricDataDTO getAnthropometricData() {
+		return anthropometricData;
+	}
+
+	public void setAnthropometricData(AnthropometricDataDTO anthropometricData) {
+		this.anthropometricData = anthropometricData;
+	}
 
 }

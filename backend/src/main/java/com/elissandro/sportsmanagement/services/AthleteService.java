@@ -12,17 +12,23 @@ import com.elissandro.sportsmanagement.dtos.AthleteDTO;
 import com.elissandro.sportsmanagement.dtos.CategoryDTO;
 import com.elissandro.sportsmanagement.dtos.ContractDTO;
 import com.elissandro.sportsmanagement.entities.AddressAthlete;
+import com.elissandro.sportsmanagement.entities.AnthropometricData;
 import com.elissandro.sportsmanagement.entities.Athlete;
 import com.elissandro.sportsmanagement.entities.AthleteStatistics;
 import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Contract;
 import com.elissandro.sportsmanagement.entities.PersonalDocuments;
 import com.elissandro.sportsmanagement.entities.PlayerPosition;
+import com.elissandro.sportsmanagement.entities.SubjectivePerceptionEffort;
+import com.elissandro.sportsmanagement.entities.SubjectivePerceptionRecovery;
 import com.elissandro.sportsmanagement.repositories.AddressAthleteRepository;
+import com.elissandro.sportsmanagement.repositories.AnthropometricDataRepository;
 import com.elissandro.sportsmanagement.repositories.AthleteRepository;
 import com.elissandro.sportsmanagement.repositories.AthleteStatisticsRepository;
 import com.elissandro.sportsmanagement.repositories.ContractRepository;
 import com.elissandro.sportsmanagement.repositories.PersonalDocumentsRepository;
+import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionEffortRepository;
+import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionRecoveryRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
 
@@ -43,6 +49,15 @@ public class AthleteService {
 	
 	@Autowired
 	private AthleteStatisticsRepository athleteStatisticsRepository;
+	
+	@Autowired
+	private AnthropometricDataRepository anthropometricDataRepository;
+	
+	@Autowired
+	private SubjectivePerceptionEffortRepository subjectivePerceptionEffortRepository;
+	
+	@Autowired
+	private SubjectivePerceptionRecoveryRepository subjectivePerceptionRecoveryRepository;
 
 	@Transactional(readOnly = true)
 	public AthleteDTO findById(Long id) {
@@ -97,6 +112,24 @@ public class AthleteService {
 		personalDocuments.setBidCBF(dto.getPersonalDocuments().getBidCBF());
 		personalDocuments = personalDocumentsRepository.save(personalDocuments);
 		
+		AnthropometricData anthropometricData = new AnthropometricData();
+		if (dto.getAnthropometricData() != null && dto.getAnthropometricData().getId() != null) {
+		    anthropometricData.setId(dto.getAnthropometricData().getId());
+		}
+		
+		
+		
+		Double bmiValue = calculateBmi(dto.getAnthropometricData().getWeight(), dto.getAnthropometricData().getHeight());
+		
+		
+		anthropometricData.setBmi(bmiValue);
+		anthropometricData.setBodyFat(dto.getAnthropometricData().getBodyFat());
+		anthropometricData.setHeight(dto.getAnthropometricData().getHeight());
+		anthropometricData.setLeanMass(dto.getAnthropometricData().getLeanMass());
+		anthropometricData.setMeasurementDate(dto.getAnthropometricData().getMeasurementDate());
+		anthropometricData.setWeight(dto.getAnthropometricData().getWeight());
+		anthropometricData = anthropometricDataRepository.save(anthropometricData);
+		
 		AthleteStatistics athleteStatistics = new AthleteStatistics();
 		if (dto.getAthleteStatistics() != null && dto.getAthleteStatistics().getId() != null) {
 		    athleteStatistics.setId(dto.getAthleteStatistics().getId());
@@ -113,6 +146,53 @@ public class AthleteService {
 		athleteStatistics.setLastUpdated(LocalDateTime.now());
 		athleteStatistics = athleteStatisticsRepository.save(athleteStatistics);
 		
+		for(var speDTO : dto.getSubjectivePerceptionEfforts()) {
+			SubjectivePerceptionEffort spe = new SubjectivePerceptionEffort();
+			
+			if(speDTO.getId() != null) {
+				spe.setId(speDTO.getId());
+			}
+			
+			spe.setDate(dto.getBirthDate());
+			spe.setDuration(dto.getSubjectivePerceptionEfforts().get(0).getDuration());
+			spe.setPseValue(dto.getSubjectivePerceptionEfforts().get(0).getPseValue());
+			spe.setObservations(dto.getSubjectivePerceptionEfforts().get(0).getObservations());
+			spe.setRecordedBy(dto.getSubjectivePerceptionEfforts().get(0).getRecordedBy());
+			spe.setRecordedAt(dto.getSubjectivePerceptionEfforts().get(0).getRecordedAt());
+			spe.setValid(dto.getSubjectivePerceptionEfforts().get(0).isValid());
+			spe = subjectivePerceptionEffortRepository.save(spe);
+			entity.getSubjectivePerceptionEfforts().add(spe);
+		}
+		
+		SubjectivePerceptionRecovery spr = new SubjectivePerceptionRecovery();
+		
+		for(var sprDTO : dto.getSubjectivePerceptionRecoveries()) {
+			if(sprDTO.getId() != null) {
+				spr.setId(sprDTO.getId());
+			}
+			
+			spr.setAppetiteLevel(dto.getSubjectivePerceptionRecoveries().get(0).getAppetiteLevel());
+			spr.setCreatedAt(dto.getSubjectivePerceptionRecoveries().get(0).getCreatedAt());
+			spr.setDate(dto.getBirthDate());
+			spr.setHydrationLevel(dto.getSubjectivePerceptionRecoveries().get(0).getHydrationLevel());
+			spr.setFatiqueLevel(dto.getSubjectivePerceptionRecoveries().get(0).getFatiqueLevel());
+			spr.setMotivationLevel(dto.getSubjectivePerceptionRecoveries().get(0).getMotivationLevel());
+			spr.setRecordedBy(dto.getSubjectivePerceptionRecoveries().get(0).getRecordedBy());
+			spr.setSleepQuality(dto.getSubjectivePerceptionRecoveries().get(0).getSleepQuality());
+			spr.setPsrValue(dto.getSubjectivePerceptionRecoveries().get(0).getPsrValue());
+			spr.setObservations(dto.getSubjectivePerceptionRecoveries().get(0).getObservations());
+			spr.setIsValid(dto.getSubjectivePerceptionRecoveries().get(0).getIsValid());
+			spr.setMuscleAching(dto.getSubjectivePerceptionRecoveries().get(0).getMuscleAching());
+			spr.setSleepHours(dto.getSubjectivePerceptionRecoveries().get(0).getSleepHours());
+			spr.setStressLevel(dto.getSubjectivePerceptionRecoveries().get(0).getStressLevel());
+			spr.setNotes(dto.getSubjectivePerceptionRecoveries().get(0).getNotes());
+			spr.setType(dto.getSubjectivePerceptionRecoveries().get(0).getType());
+			spr = subjectivePerceptionRecoveryRepository.save(spr);
+			
+			entity.getSubjectivePerceptionRecoveries().add(spr);
+		}
+		
+		
 
 		entity.setName(dto.getName());
 		entity.setPhoto(dto.getPhoto());
@@ -127,6 +207,7 @@ public class AthleteService {
 		entity.setAddress(address);
 		entity.setPersonalDocuments(personalDocuments);
 		entity.setAthleteStatistics(athleteStatistics);
+		entity.setAnthropometricData(anthropometricData);
 
 		entity.getCategories().clear();
 		for (CategoryDTO catDto : dto.getCategories()) {
@@ -161,6 +242,7 @@ public class AthleteService {
 
 	}
 
+	
 	@Transactional
 	public void delete(Long id) {
 		if (!repository.existsById(id)) {
@@ -172,5 +254,16 @@ public class AthleteService {
 			throw new DatabaseException("Could not delete Athlete with id " + id);
 		}
 	}
+	
+	private Double calculateBmi(Double weight, Double height) {
+		if (weight != null && height != null && height > 0) {
+			Double bmi = weight / (height * height);
+			return Math.round(bmi * 10.0) / 10.0;
+		}
+		return null;
+		
+	}
+	
+	
 
 }

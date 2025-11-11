@@ -39,7 +39,7 @@ public class Athlete implements Serializable {
 		
 	@OneToOne(cascade = CascadeType.ALL)
 	private AddressAthlete address;
-	
+		
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_athlete_category",
 		joinColumns = @JoinColumn(name = "athlete_id"),
@@ -64,6 +64,22 @@ public class Athlete implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private AthleteStatistics athleteStatistics;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private AnthropometricData anthropometricData;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_athlete_subjective_perception_recovery",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "subjective_perception_recovery_id"))
+	private Set<SubjectivePerceptionRecovery> subjectivePerceptionRecoveries = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_athlete_subjective_perception_effort",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "subjective_perception_effort_id"))
+	private Set<SubjectivePerceptionEffort> subjectivePerceptionEfforts = new HashSet<>();
+	
+			
 	public Athlete() {
 	}
 	
@@ -200,6 +216,30 @@ public class Athlete implements Serializable {
 	public void setAthleteStatistics(AthleteStatistics athleteStatistics) {
 		this.athleteStatistics = athleteStatistics;
 	}
+	
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	
+	public void setAnthropometricData(AnthropometricData anthropometricData) {
+		this.anthropometricData = anthropometricData;
+	}
+
+	public AnthropometricData getAnthropometricData() {
+		return anthropometricData;
+	}
+
+	public Set<SubjectivePerceptionRecovery> getSubjectivePerceptionRecoveries() {
+		return subjectivePerceptionRecoveries;
+	}
+
+	public Set<SubjectivePerceptionEffort> getSubjectivePerceptionEfforts() {
+		return subjectivePerceptionEfforts;
+	}
 
 	@Override
 	public int hashCode() {
@@ -216,14 +256,6 @@ public class Athlete implements Serializable {
 			return false;
 		Athlete other = (Athlete) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
 	}
 
 }

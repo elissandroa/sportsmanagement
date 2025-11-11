@@ -2,7 +2,9 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.elissandro.sportsmanagement.enums.ContractType;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,6 +30,9 @@ public class Contract implements Serializable {
 	private LocalDate endDate;
 	private String contractPdf;
 	private ContractType contractType;
+	
+	@ManyToMany(mappedBy = "contracts")
+	private Set<Athlete> athletes = new HashSet<>();
 	
 	public Contract() {
 	}

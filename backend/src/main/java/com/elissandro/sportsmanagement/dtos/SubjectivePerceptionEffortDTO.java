@@ -17,8 +17,7 @@ public class SubjectivePerceptionEffortDTO implements Serializable {
 	private LocalDate recordedAt;
 	private boolean isValid;
 	
-	private AthleteDTO athlete;
-	
+		
 	public SubjectivePerceptionEffortDTO() {
 	}
 	
@@ -44,9 +43,8 @@ public class SubjectivePerceptionEffortDTO implements Serializable {
 		this.recordedBy = entity.getRecordedBy();
 		this.recordedAt = entity.getRecordedAt();
 		this.isValid = entity.isValid();
-		this.athlete = new AthleteDTO(entity.getAthlete());
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -110,13 +108,4 @@ public class SubjectivePerceptionEffortDTO implements Serializable {
 	public void setValid(boolean isValid) {
 		this.isValid = isValid;
 	}
-
-	public AthleteDTO getAthlete() {
-		return athlete;
-	}
-
-	public void setAthlete(AthleteDTO athlete) {
-		this.athlete = athlete;
-	}
-
 }

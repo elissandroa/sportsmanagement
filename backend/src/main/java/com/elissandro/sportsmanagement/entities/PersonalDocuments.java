@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "tb_personal_documents")
@@ -20,6 +21,9 @@ public class PersonalDocuments implements Serializable {
 	private String rg;
 	private String passport;
 	private String bidCBF;
+	
+	@OneToOne(mappedBy = "personalDocuments")
+	private Athlete athlete;
 	
 	public PersonalDocuments() {
 	}
@@ -71,6 +75,7 @@ public class PersonalDocuments implements Serializable {
 	public void setBidCBF(String bidCBF) {
 		this.bidCBF = bidCBF;
 	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

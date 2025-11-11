@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.SubjectivePerceptionEffortDTO;
-import com.elissandro.sportsmanagement.entities.Athlete;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionEffort;
-import com.elissandro.sportsmanagement.repositories.AthleteRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionEffortRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
@@ -20,9 +18,6 @@ public class SubjectivePerceptionEffortService {
 	
 	@Autowired	
 	private SubjectivePerceptionEffortRepository repository;
-	
-	@Autowired
-	private AthleteRepository athleteRepository;
 	
 	
 	@Transactional(readOnly = true)
@@ -64,11 +59,6 @@ public class SubjectivePerceptionEffortService {
 		entity.setRecordedBy(dto.getRecordedBy());
 		entity.setRecordedAt(LocalDate.now());
 		entity.setValid(dto.isValid());
-		Athlete athlete = athleteRepository.findById(dto.getAthlete().getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Athlete not found"));
-		entity.setAthlete(athlete);
-		
-		
 	}
 	
 	

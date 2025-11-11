@@ -9,7 +9,6 @@ public class AthleteStatisticsDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	private long athleteId;
 	private Integer matchesPlayed;
 	private Integer minutesPlayed;
 	private Integer goalsScored;
@@ -21,14 +20,15 @@ public class AthleteStatisticsDTO implements Serializable {
 	private Double averagePsr;
 	private LocalDateTime lastUpdated;
 	
+	private AthleteDTO athlete;
+	
 	public AthleteStatisticsDTO() {
 	}
 	
-	public AthleteStatisticsDTO(Long id, long athleteId, Integer matchesPlayed, Integer minutesPlayed,
+	public AthleteStatisticsDTO(Long id, Integer matchesPlayed, Integer minutesPlayed,
 			Integer goalsScored, Integer assists, Integer yellowCards, Integer redCards, Integer injuries,
 			Double averagePse, Double averagePsr, LocalDateTime lastUpdated) {
 		this.id = id;
-		this.athleteId = athleteId;
 		this.matchesPlayed = matchesPlayed;
 		this.minutesPlayed = minutesPlayed;
 		this.goalsScored = goalsScored;
@@ -53,6 +53,7 @@ public class AthleteStatisticsDTO implements Serializable {
 		this.averagePse = entity.getAveragePse();
 		this.averagePsr = entity.getAveragePsr();
 		this.lastUpdated = entity.getLastUpdated();
+		
 	}
 
 	public Long getId() {
@@ -63,13 +64,6 @@ public class AthleteStatisticsDTO implements Serializable {
 		this.id = id;
 	}
 
-	public long getAthleteId() {
-		return athleteId;
-	}
-
-	public void setAthleteId(long athleteId) {
-		this.athleteId = athleteId;
-	}
 
 	public Integer getMatchesPlayed() {
 		return matchesPlayed;
@@ -149,6 +143,14 @@ public class AthleteStatisticsDTO implements Serializable {
 
 	public void setLastUpdated(LocalDateTime lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public AthleteDTO getAthlete() {
+		return athlete;
+	}
+
+	public void setAthlete(AthleteDTO athlete) {
+		this.athlete = athlete;
 	}
 	
 }

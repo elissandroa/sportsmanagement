@@ -17,6 +17,8 @@ public class AddressAthleteDTO implements Serializable {
 	private String state;
 	private String country;
 	
+	private AthleteDTO athlete;
+	
 	public AddressAthleteDTO() {
 	}
 	
@@ -115,5 +117,13 @@ public class AddressAthleteDTO implements Serializable {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public AthleteDTO getAthlete() {
+		return athlete;
+	}
+
+	public void setAthlete(AthleteDTO athlete) {
+		this.athlete = athlete;
 	}
 }

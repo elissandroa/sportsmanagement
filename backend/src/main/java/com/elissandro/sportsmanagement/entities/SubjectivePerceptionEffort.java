@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,8 +19,7 @@ public class SubjectivePerceptionEffort implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
-	private Athlete athlete;
+
 	private LocalDate date;
 	private Integer pseValue;
 	private Integer duration;
@@ -33,10 +31,9 @@ public class SubjectivePerceptionEffort implements Serializable {
 	public SubjectivePerceptionEffort() {
 	}
 	
-	public SubjectivePerceptionEffort(Long id, Athlete athlete, LocalDate date, Integer pseValue, Integer duration,
+	public SubjectivePerceptionEffort(Long id, LocalDate date, Integer pseValue, Integer duration,
 			String observations, Long recordedBy, LocalDate recordedAt, boolean isValid) {
 		this.id = id;
-		this.athlete = athlete;
 		this.date = date;
 		this.pseValue = pseValue;
 		this.duration = duration;
@@ -52,14 +49,6 @@ public class SubjectivePerceptionEffort implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Athlete getAthlete() {
-		return athlete;
-	}
-
-	public void setAthlete(Athlete athlete) {
-		this.athlete = athlete;
 	}
 
 	public LocalDate getDate() {
@@ -109,6 +98,8 @@ public class SubjectivePerceptionEffort implements Serializable {
 	public void setRecordedAt(LocalDate recordedAt) {
 		this.recordedAt = recordedAt;
 	}
+
+	
 
 	public boolean isValid() {
 		return isValid;

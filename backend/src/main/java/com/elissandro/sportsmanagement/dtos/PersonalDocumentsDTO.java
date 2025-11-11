@@ -14,6 +14,8 @@ public class PersonalDocumentsDTO implements Serializable {
 	private String passport;
 	private String bidCBF;
 	
+	private AthleteDTO athlete;
+	
 	public PersonalDocumentsDTO() {
 	}
 	
@@ -31,6 +33,7 @@ public class PersonalDocumentsDTO implements Serializable {
 		this.rg = entity.getRg();
 		this.passport = entity.getPassport();
 		this.bidCBF = entity.getBidCBF();
+
 	}
 
 	public Long getId() {
@@ -71,5 +74,13 @@ public class PersonalDocumentsDTO implements Serializable {
 
 	public void setBidCBF(String bidCBF) {
 		this.bidCBF = bidCBF;
+	}
+
+	public AthleteDTO getAthlete() {
+		return athlete;
+	}
+
+	public void setAthlete(AthleteDTO athlete) {
+		this.athlete = athlete;
 	}
 }
