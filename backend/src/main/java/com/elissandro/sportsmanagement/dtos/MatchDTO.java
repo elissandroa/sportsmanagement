@@ -23,6 +23,7 @@ public class MatchDTO implements Serializable {
 	private Integer goalsAgainst;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private MatchAnalysisDTO matchAnalysis;
 	
 	public MatchDTO() {
 	}
@@ -52,6 +53,7 @@ public class MatchDTO implements Serializable {
 		this.goalsAgainst = entity.getGoalsAgainst();
 		this.createdAt = entity.getCreatedAt();
 		this.updatedAt = entity.getUpdatedAt();
+		this.matchAnalysis = entity.getMatchAnalysis() != null ? new MatchAnalysisDTO(entity.getMatchAnalysis()) : null;
 	}
 
 	public Long getId() {
@@ -132,6 +134,14 @@ public class MatchDTO implements Serializable {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public MatchAnalysisDTO getMatchAnalysis() {
+		return matchAnalysis;
+	}
+
+	public void setMatchAnalysis(MatchAnalysisDTO matchAnalysis) {
+		this.matchAnalysis = matchAnalysis;
 	}
 
 }

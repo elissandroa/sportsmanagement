@@ -2,11 +2,11 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.MatchResult;
 import com.elissandro.sportsmanagement.enums.MatchStatus;
 import com.elissandro.sportsmanagement.enums.MatchVenue;
@@ -17,11 +17,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_match")
-public class Match implements Serializable {
+public class Match extends BaseEntityAudit implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -35,13 +36,19 @@ public class Match implements Serializable {
 	private MatchResult result;
 	private Integer goalsFor;
 	private Integer goalsAgainst;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+
 	
 	@ManyToMany(mappedBy = "matches")
 	private Set<Competition> competitions = new HashSet<>();
 	
+	@OneToOne
+	private MatchAnalysis matchAnalysis;
+	
 	public Match() {
+	}
+	
+	public Match(Long id) {
+		this.id = id;
 	}
 	
 	public Match(Long id, Opponent opponent, LocalDate matchDate, MatchVenue venue, MatchStatus status,
@@ -120,20 +127,12 @@ public class Match implements Serializable {
 		this.goalsAgainst = goalsAgainst;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
+	public MatchAnalysis getMatchAnalysis() {
+		return matchAnalysis;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
+	public void setMatchAnalysis(MatchAnalysis matchAnalysis) {
+		this.matchAnalysis = matchAnalysis;
 	}
 
 	@Override

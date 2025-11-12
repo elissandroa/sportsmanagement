@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_opponent")
-public class Opponent implements Serializable {
+public class Opponent extends BaseEntityAudit implements  Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -29,8 +31,6 @@ public class Opponent implements Serializable {
 	private String state;
 	private String stadium;
 	private String logoUrl;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_opponent_category",
@@ -48,8 +48,6 @@ public class Opponent implements Serializable {
 		this.state = state;
 		this.stadium = stadium;
 		this.logoUrl = logoUrl;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 	}
 
 	public Long getId() {
@@ -99,22 +97,6 @@ public class Opponent implements Serializable {
 
 	public void setLogoUrl(String logoUrl) {
 		this.logoUrl = logoUrl;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public Set<Category> getCategories() {

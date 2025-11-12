@@ -1,7 +1,5 @@
 package com.elissandro.sportsmanagement.services;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,16 +8,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.MatchDTO;
 import com.elissandro.sportsmanagement.entities.Match;
+import com.elissandro.sportsmanagement.entities.MatchAnalysis;
 import com.elissandro.sportsmanagement.entities.Opponent;
+import com.elissandro.sportsmanagement.repositories.MatchAnalysisRepository;
 import com.elissandro.sportsmanagement.repositories.MatchRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
 
 @Service
-public class MatchService {
+public class  MatchService {
 
 	@Autowired
 	private MatchRepository repository;
+	
+	@Autowired
+	private MatchAnalysisRepository matchAnalysisRepository;
 
 
 	@Transactional(readOnly = true)
@@ -65,11 +68,37 @@ public class MatchService {
 		entity.setResult(dto.getResult());
 		entity.setGoalsFor(dto.getGoalsFor());
 		entity.setGoalsAgainst(dto.getGoalsAgainst());
-		if(dto.getCreatedAt() != null) {
-			entity.setUpdatedAt(LocalDateTime.now());
-		} else {
-			entity.setCreatedAt(LocalDateTime.now());
+		
+		MatchAnalysis matchAnalysis = new MatchAnalysis();
+		
+		if(dto.getMatchAnalysis() != null && dto.getMatchAnalysis().getId() != null) {
+			matchAnalysis.setId(dto.getMatchAnalysis().getId());
 		}
+			matchAnalysis.setAnalyzedAt(dto.getMatchAnalysis().getAnalyzedAtId());
+			matchAnalysis.setBallPossession(dto.getMatchAnalysis().getBallPossession());
+			matchAnalysis.setCompletePasses(dto.getMatchAnalysis().getCompletePasses());
+			matchAnalysis.setFinalizationsOnTarget(dto.getMatchAnalysis().getFinalizationsOnTarget());
+			matchAnalysis.setFinalizations(dto.getMatchAnalysis().getFinalizations());
+			matchAnalysis.setLongBalls(dto.getMatchAnalysis().getLongBalls());
+			matchAnalysis.setPassAccuracy(dto.getMatchAnalysis().getPassAccuracy());
+			matchAnalysis.setPasses(dto.getMatchAnalysis().getPasses());
+			matchAnalysis.setDuelsWon(dto.getMatchAnalysis().getDuelsWon());
+			matchAnalysis.setDuels(dto.getMatchAnalysis().getDuels());
+			matchAnalysis.setCrossesCompleted(dto.getMatchAnalysis().getCrossesCompleted());
+			matchAnalysis.setCrosses(dto.getMatchAnalysis().getCrosses());
+			matchAnalysis.setFoulsComitted(dto.getMatchAnalysis().getFoulsComitted());
+			matchAnalysis.setFoulsSuffered(dto.getMatchAnalysis().getFoulsSuffered());
+			matchAnalysis.setOffsides(dto.getMatchAnalysis().getOffsides());
+			matchAnalysis.setPressureAfterLossWon(dto.getMatchAnalysis().getPressureAfterLossWon());
+			matchAnalysis.setPressureAfterLossLost(dto.getMatchAnalysis().getPressureAfterLossLost());
+			matchAnalysis.setPressureAfterLossNone(dto.getMatchAnalysis().getPressureAfterLossNone());
+			matchAnalysis.setObservations(dto.getMatchAnalysis().getObservations());
+			matchAnalysis.setCorners(dto.getMatchAnalysis().getCorners());
+			matchAnalysis.setLongBallsCompleted(dto.getMatchAnalysis().getLongBallsCompleted());
+		
+		matchAnalysis = matchAnalysisRepository.save(matchAnalysis);
+		entity.setMatchAnalysis(matchAnalysis);
+		
 	}
 
 	@Transactional

@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,8 +16,6 @@ public class MatchAnalysis implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
-	private Match match;
 	private Integer passes;
 	private Integer completePasses;
 	private Float passAccuracy;
@@ -40,18 +37,22 @@ public class MatchAnalysis implements java.io.Serializable {
 	private Integer pressureAfterLossNone;
 	private String observations;
 	private Long analyzedAtId;
+
 	
 	public MatchAnalysis() {
 	}
 	
-	public MatchAnalysis(Long id, Match match, Integer passes, Integer completePasses, Float passAccuracy,
+	public MatchAnalysis(Long id) {
+		this.id = id;
+	}
+	
+	public MatchAnalysis(Long id, Integer passes, Integer completePasses, Float passAccuracy,
 			Integer finalizations, Integer finalizationsOnTarget, Integer longBalls, Integer longBallsCompleted,
 			Integer corners, Integer crosses, Integer crossesCompleted, Integer offsides, Integer duels,
 			Integer duelsWon, Integer foulsComitted, Integer foulsSuffered, Float ballPossession,
 			Integer pressureAfterLossWon, Integer pressureAfterLossLost, Integer pressureAfterLossNone,
 			String observations, Long analyzedAtId) {
 		this.id = id;
-		this.match = match;
 		this.passes = passes;
 		this.completePasses = completePasses;
 		this.passAccuracy = passAccuracy;
@@ -81,14 +82,6 @@ public class MatchAnalysis implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Match getMatch() {
-		return match;
-	}
-
-	public void setMatch(Match match) {
-		this.match = match;
 	}
 
 	public Integer getPasses() {

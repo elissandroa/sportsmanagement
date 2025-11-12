@@ -2,14 +2,12 @@ package com.elissandro.sportsmanagement.dtos;
 
 import java.io.Serializable;
 
-import com.elissandro.sportsmanagement.entities.Match;
 import com.elissandro.sportsmanagement.entities.MatchAnalysis;
 
 public class MatchAnalysisDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	private Match match;
 	private Integer passes;
 	private Integer completePasses;
 	private Float passAccuracy;
@@ -35,14 +33,13 @@ public class MatchAnalysisDTO implements Serializable {
 	public MatchAnalysisDTO() {
 	}
 	
-	public MatchAnalysisDTO(Long id, Match match, Integer passes, Integer completePasses, Float passAccuracy,
+	public MatchAnalysisDTO(Long id, Integer passes, Integer completePasses, Float passAccuracy,
 			Integer finalizations, Integer finalizationsOnTarget, Integer longBalls, Integer longBallsCompleted,
 			Integer corners, Integer crosses, Integer crossesCompleted, Integer offsides, Integer duels,
 			Integer duelsWon, Integer foulsComitted, Integer foulsSuffered, Float ballPossession,
 			Integer pressureAfterLossWon, Integer pressureAfterLossLost, Integer pressureAfterLossNone,
 			String observations, Long analyzedAtId) {
 		this.id = id;
-		this.match = match;
 		this.passes = passes;
 		this.completePasses = completePasses;
 		this.passAccuracy = passAccuracy;
@@ -68,7 +65,6 @@ public class MatchAnalysisDTO implements Serializable {
 	
 	public MatchAnalysisDTO(MatchAnalysis entity) {
 		this.id = entity.getId();
-		this.match = entity.getMatch();
 		this.passes = entity.getPasses();
 		this.completePasses = entity.getCompletePasses();
 		this.passAccuracy = entity.getPassAccuracy();
@@ -100,14 +96,6 @@ public class MatchAnalysisDTO implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Match getMatch() {
-		return match;
-	}
-
-	public void setMatch(Match match) {
-		this.match = match;
 	}
 
 	public Integer getPasses() {

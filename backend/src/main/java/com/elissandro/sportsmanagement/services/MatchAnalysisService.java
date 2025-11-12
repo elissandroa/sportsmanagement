@@ -52,7 +52,6 @@ public class MatchAnalysisService {
 		if(dto.getId() != null) {
 			entity.setId(dto.getId());
 		}
-		entity.setMatch(dto.getMatch());
 		entity.setPasses(dto.getPasses());
 		entity.setCompletePasses(dto.getCompletePasses());
 		entity.setPassAccuracy(dto.getPassAccuracy());

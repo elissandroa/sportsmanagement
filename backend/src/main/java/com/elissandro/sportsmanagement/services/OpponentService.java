@@ -1,6 +1,5 @@
 package com.elissandro.sportsmanagement.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +56,6 @@ public class OpponentService {
 		entity.setState(dto.getState());
 		entity.setStadium(dto.getStadium());
 		entity.setLogoUrl(dto.getLogoUrl());
-		if (dto.getId() != null) {
-			entity.setId(dto.getId());
-			entity.setUpdatedAt(LocalDateTime.now());
-		}
-		if (dto.getId() == null) {
-			entity.setCreatedAt(LocalDateTime.now());
-		}
 		entity.getCategories().clear();
 		dto.getCategories().forEach(catDto -> {
 			var category = new Category();
