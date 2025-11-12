@@ -2,6 +2,8 @@ package com.elissandro.sportsmanagement.dtos;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionRecovery;
 import com.elissandro.sportsmanagement.enums.InjuryType;
@@ -26,6 +28,8 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 	private Integer appetiteLevel;
 	private String notes;
 	private Boolean isValid;
+	
+	private List<PainPointDTO> painPoints = new ArrayList<>();
 
 	
 	public SubjectivePerceptionRecoveryDTO() {
@@ -72,6 +76,7 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 		this.notes = entity.getNotes();
 		this.isValid =  entity.getIsValid();
 		this.type = entity.getType();
+		entity.getPainPoints().forEach(pp -> this.painPoints.add(new PainPointDTO(pp)));
 	}
 
 	public Long getId() {
@@ -208,6 +213,10 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 
 	public void setType(InjuryType type) {
 		this.type = type;
+	}
+
+	public List<PainPointDTO> getPainPoints() {
+		return painPoints;
 	}
 
 }

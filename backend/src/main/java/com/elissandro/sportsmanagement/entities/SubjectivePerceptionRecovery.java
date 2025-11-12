@@ -2,7 +2,9 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.elissandro.sportsmanagement.enums.InjuryType;
 
@@ -10,6 +12,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,6 +41,12 @@ public class SubjectivePerceptionRecovery implements Serializable {
 	private Integer appetiteLevel;
 	private String notes;
 	private Boolean isValid;
+	
+	@ManyToMany
+	@JoinTable(name = "tb_psr_painpoint",
+		joinColumns = @JoinColumn(name = "psr_id"),
+		inverseJoinColumns = @JoinColumn(name = "painpoint_id"))
+	private Set<PainPoint> painPoints = new HashSet<>();
 	
 				
 	public SubjectivePerceptionRecovery() {
@@ -204,6 +215,10 @@ public class SubjectivePerceptionRecovery implements Serializable {
 
 	public void setType(InjuryType type) {
 		this.type = type;
+	}
+
+	public Set<PainPoint> getPainPoints() {
+		return painPoints;
 	}
 
 	@Override

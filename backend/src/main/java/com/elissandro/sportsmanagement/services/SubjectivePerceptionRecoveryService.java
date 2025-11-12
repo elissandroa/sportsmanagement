@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.SubjectivePerceptionRecoveryDTO;
+import com.elissandro.sportsmanagement.entities.PainPoint;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionRecovery;
+import com.elissandro.sportsmanagement.repositories.PainPointRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionRecoveryRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
@@ -19,6 +21,10 @@ public class SubjectivePerceptionRecoveryService {
 
 	@Autowired
 	private SubjectivePerceptionRecoveryRepository repository;
+	
+	@Autowired
+	private PainPointRepository painPointRepository;
+	
 
 
 	@Transactional(readOnly = true)
@@ -69,8 +75,23 @@ public class SubjectivePerceptionRecoveryService {
 		entity.setAppetiteLevel(dto.getAppetiteLevel());
 		entity.setNotes(dto.getNotes());
 		entity.setIsValid(dto.getIsValid());
-
 		
+		
+		entity.getPainPoints().clear();
+		for (var ppDto : dto.getPainPoints()) {
+			PainPoint painPoint = new PainPoint();
+			if(ppDto.getId() != null) {
+				painPoint.setId(ppDto.getId());
+			}
+			painPoint.setX(ppDto.getX());
+			painPoint.setY(ppDto.getY());
+			painPoint.setIntensity(ppDto.getIntensity());
+			painPoint.setType(ppDto.getType());
+			painPoint.setDescription(ppDto.getDescription());
+			painPoint.setBodyPart(ppDto.getBodyPart());
+			painPointRepository.save(painPoint);
+			entity.getPainPoints().add(painPoint);
+		}
 	}
 
 	@Transactional
