@@ -1,7 +1,5 @@
 package com.elissandro.sportsmanagement.services;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,13 +62,6 @@ public class MaterialService {
 		entity.setIsAvailable(dto.getIsAvailable());
 		
 		
-		if (dto.getId() != null) {
-			entity.setId(dto.getId());
-			entity.setUpdatedAt(LocalDateTime.now());
-		}
-		if (dto.getId() == null) {
-			entity.setCreatedAt(LocalDateTime.now());
-		}
 		entity.getCategories().clear();
 		dto.getCategories().forEach(catDto -> {
 			var category = new Category();

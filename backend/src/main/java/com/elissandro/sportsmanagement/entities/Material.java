@@ -2,14 +2,16 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.MaterialType;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,13 +23,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_material")
-public class Material implements Serializable {
+public class Material extends BaseEntityAudit implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	@Enumerated(EnumType.STRING)
 	private MaterialType type;
 	private Integer quantity;
 	private String size;
@@ -36,8 +39,6 @@ public class Material implements Serializable {
 	private Double cost;
 	private String supplier;
 	private Boolean isAvailable;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_material_category",
@@ -49,8 +50,7 @@ public class Material implements Serializable {
 	}
 	
 	public Material(Long id, String name, MaterialType type, Integer quantity, String size, String condition,
-			LocalDate purchaseDate, Double cost, String supplier, Boolean isAvailable, LocalDateTime createdAt,
-			LocalDateTime updatedAt) {
+			LocalDate purchaseDate, Double cost, String supplier, Boolean isAvailable) {
 		this.id = id;
 		this.name = name;
 		this.type = type;
@@ -61,8 +61,6 @@ public class Material implements Serializable {
 		this.cost = cost;
 		this.supplier = supplier;
 		this.isAvailable = isAvailable;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 	}
 
 	public Long getId() {
@@ -143,22 +141,6 @@ public class Material implements Serializable {
 
 	public void setIsAvailable(Boolean isAvailable) {
 		this.isAvailable = isAvailable;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public Set<Category> getCategories() {
