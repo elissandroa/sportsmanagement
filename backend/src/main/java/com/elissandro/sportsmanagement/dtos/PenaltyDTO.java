@@ -19,9 +19,7 @@ public class PenaltyDTO implements Serializable {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	private Long athleteId;
-	private Long matchId;
-
+	
 	public PenaltyDTO() {
 	}
 
@@ -44,8 +42,6 @@ public class PenaltyDTO implements Serializable {
 		this.served = entity.getServed();
 		this.createdAt = entity.getCreatedAt();
 		this.updatedAt = entity.getUpdatedAt();
-		this.athleteId = entity.getAthlete() != null ?  entity.getAthlete().getId() : null;
-		this.matchId = entity.getMatch() != null ? entity.getMatch().getId() : null;
 
 	}
 
@@ -111,22 +107,6 @@ public class PenaltyDTO implements Serializable {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public Long getAthleteId() {
-		return athleteId;
-	}
-
-	public void setAthleteId(Long athleteId) {
-		this.athleteId = athleteId;
-	}
-
-	public Long getMatchId() {
-		return matchId;
-	}
-
-	public void setMatchId(Long matchId) {
-		this.matchId = matchId;
 	}
 
 }

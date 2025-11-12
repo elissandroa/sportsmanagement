@@ -41,6 +41,8 @@ public class AthleteDTO implements Serializable {
 	private AnthropometricDataDTO anthropometricData;
 	
 	private List<MedicalRecordDTO> medicalRecords = new ArrayList<>();
+	
+	private List<PenaltyDTO> penalties = new ArrayList<>();
 		
 	public AthleteDTO() {
 	}
@@ -76,6 +78,10 @@ public class AthleteDTO implements Serializable {
 		this.personalDocuments = new PersonalDocumentsDTO(entity.getPersonalDocuments());
 		this.athleteStatistics = new AthleteStatisticsDTO(entity.getAthleteStatistics());
 		this.anthropometricData = new AnthropometricDataDTO(entity.getAnthropometricData());
+		
+		for(var p : entity.getPenalties()) {
+			this.penalties.add(new PenaltyDTO(p));
+		}
 		
 		for(var mr : entity.getMedicalRecords()) {
 			this.medicalRecords.add(new MedicalRecordDTO(mr));
@@ -243,6 +249,10 @@ public class AthleteDTO implements Serializable {
 
 	public List<MedicalRecordDTO> getMedicalRecords() {
 		return medicalRecords;
+	}
+
+	public List<PenaltyDTO> getPenalties() {
+		return penalties;
 	}
 
 }

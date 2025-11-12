@@ -1,6 +1,5 @@
 package com.elissandro.sportsmanagement.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.PenaltyDTO;
-import com.elissandro.sportsmanagement.entities.Athlete;
-import com.elissandro.sportsmanagement.entities.Match;
 import com.elissandro.sportsmanagement.entities.Penalty;
 import com.elissandro.sportsmanagement.repositories.PenaltyRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
@@ -54,25 +51,6 @@ public class PenaltyService {
 			entity.setId(dto.getId());
 		}
 		
-		Athlete athlete = new Athlete();
-		if (dto.getAthleteId() != null) {
-			athlete.setId(dto.getAthleteId());
-			entity.setAthlete(athlete);
-		}
-	
-		
-		Match match = new Match();
-		if (dto.getMatchId() != null) {
-			match.setId(dto.getMatchId());
-			entity.setMatch(match);
-		}
-		
-		
-		if (dto.getCreatedAt() != null) {
-			entity.setUpdatedAt(LocalDateTime.now());
-		} else {
-			entity.setCreatedAt(LocalDateTime.now());
-		}
 		entity.setDate(dto.getDate());
 		entity.setReason(dto.getReason());
 		entity.setSuspentionGames(dto.getSuspentionGames());

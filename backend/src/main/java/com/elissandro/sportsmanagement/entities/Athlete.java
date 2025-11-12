@@ -85,6 +85,12 @@ public class Athlete implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "medical_record_id"))
 	private Set<MedicalRecord> medicalRecords = new HashSet<>();
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_athlete_penalty",
+		joinColumns = @JoinColumn(name = "athlete_id"),
+		inverseJoinColumns = @JoinColumn(name = "penalty_id"))
+	private Set<Penalty> penalties = new HashSet<>();
+	
 			
 	public Athlete() {
 	}
@@ -249,6 +255,10 @@ public class Athlete implements Serializable {
 	
 	public Set<MedicalRecord> getMedicalRecords() {
 		return medicalRecords;
+	}
+
+	public Set<Penalty> getPenalties() {
+		return penalties;
 	}
 
 	@Override

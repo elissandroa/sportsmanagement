@@ -31,6 +31,10 @@ public class SubjectivePerceptionEffort implements Serializable {
 	public SubjectivePerceptionEffort() {
 	}
 	
+	public SubjectivePerceptionEffort(Long id) {
+		this.id = id;
+	}
+	
 	public SubjectivePerceptionEffort(Long id, LocalDate date, Integer pseValue, Integer duration,
 			String observations, Long recordedBy, LocalDate recordedAt, boolean isValid) {
 		this.id = id;
@@ -124,6 +128,10 @@ public class SubjectivePerceptionEffort implements Serializable {
 			return false;
 		SubjectivePerceptionEffort other = (SubjectivePerceptionEffort) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.id = entity.getId();
 	}
 
 }

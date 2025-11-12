@@ -36,6 +36,10 @@ public class AthleteStatistics implements Serializable {
 	public AthleteStatistics() {
 	}
 	
+	public AthleteStatistics(Long id) {
+		this.id = id;
+	}
+	
 	public AthleteStatistics(Long id, Integer matchesPlayed, Integer minutesPlayed, Integer goalsScored,
 			Integer assists, Integer yellowCards, Integer redCards, Integer injuries, Double averagePse,
 			Double averagePsr, LocalDateTime lastUpdated) {
@@ -155,6 +159,10 @@ public class AthleteStatistics implements Serializable {
 			return false;
 		AthleteStatistics other = (AthleteStatistics) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.InjuryStatus;
 import com.elissandro.sportsmanagement.enums.InjuryType;
 
@@ -20,7 +21,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_medical_record")
-public class MedicalRecord implements Serializable {
+public class MedicalRecord extends BaseEntityAudit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -39,18 +40,20 @@ public class MedicalRecord implements Serializable {
 	private String treatment;
 	private String severity;
 	private int treatedBy;
-	private LocalDate createdAt;
-	private LocalDate updatedAt;
 
 	@ManyToMany(mappedBy = "medicalRecords")
 	private Set<Athlete> athletes = new HashSet<>();
 
 	public MedicalRecord() {
 	}
+	
+	public MedicalRecord(Long id) {
+		this.id = id;
+	}
 
 	public MedicalRecord(Long id, InjuryType type, String bodyPart, String bodyPartCoordinates, String description,
 			LocalDate injuryDate, LocalDate expectedRun, LocalDate actualReturn, InjuryStatus status, String treatment,
-			String severity, int treatedBy, LocalDate createdAt, LocalDate updatedAt) {
+			String severity, int treatedBy) {
 		this.id = id;
 		this.type = type;
 		this.bodyPart = bodyPart;
@@ -63,8 +66,6 @@ public class MedicalRecord implements Serializable {
 		this.treatment = treatment;
 		this.severity = severity;
 		this.treatedBy = treatedBy;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 	}
 
 	public Long getId() {
@@ -163,21 +164,7 @@ public class MedicalRecord implements Serializable {
 		this.treatedBy = treatedBy;
 	}
 
-	public LocalDate getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDate createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDate getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDate updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -224,6 +211,20 @@ public class MedicalRecord implements Serializable {
 		} else {
 			return null;
 		}
+	}
+
+	public void setDaysOut(Integer daysOut) {
+		// This method is intentionally left blank as daysOut is a derived property	
+	}
+
+	
+	public void setRemainingDays(Integer remainingDays) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athletes.add(entity);	
 	}
 
 }

@@ -2,6 +2,7 @@ package com.elissandro.sportsmanagement.dtos;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.elissandro.sportsmanagement.entities.MedicalRecord;
 import com.elissandro.sportsmanagement.enums.InjuryStatus;
@@ -22,8 +23,8 @@ public class MedicalRecordDTO implements Serializable {
 	private String treatment;
 	private String severity;
 	private int treatedBy;
-	private LocalDate createdAt;
-	private LocalDate updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	private Integer daysOut;
 	private Integer remainingDays;
 	
@@ -32,7 +33,7 @@ public class MedicalRecordDTO implements Serializable {
 	
 	public MedicalRecordDTO(Long id, InjuryType type, String bodyPart, String bodyPartCoordinates, String description,
 			LocalDate injuryDate, LocalDate expectedReturn, LocalDate actualReturn, InjuryStatus status, String treatment,
-			String severity, int treatedBy, LocalDate createdAt, LocalDate updatedAt) {
+			String severity, int treatedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.type = type;
 		this.bodyPart = bodyPart;
@@ -164,19 +165,19 @@ public class MedicalRecordDTO implements Serializable {
 		this.treatedBy = treatedBy;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public LocalDate getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(LocalDate updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

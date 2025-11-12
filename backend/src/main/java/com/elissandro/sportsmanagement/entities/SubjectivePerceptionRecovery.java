@@ -41,6 +41,10 @@ public class SubjectivePerceptionRecovery implements Serializable {
 	public SubjectivePerceptionRecovery() {
 	}
 	
+	public SubjectivePerceptionRecovery(Long id) {
+		this.id = id;
+	}
+	
 	public SubjectivePerceptionRecovery(Long id, InjuryType type, LocalDate date, Integer psrValue, String observations,
 			Long recordedBy, LocalDate createdAt, Integer fatiqueLevel, Integer motivationLevel, Integer stressLevel,
 			Float sleepHours, Integer sleepQuality, Integer muscleAching, Integer hydrationLevel,
@@ -217,6 +221,10 @@ public class SubjectivePerceptionRecovery implements Serializable {
 			return false;
 		SubjectivePerceptionRecovery other = (SubjectivePerceptionRecovery) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.id = entity.getId();
 	}
 	
 }

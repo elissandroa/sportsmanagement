@@ -30,8 +30,14 @@ public class AddressAthlete implements Serializable {
 	@OneToOne(mappedBy = "address")
 	private Athlete athlete;
 	
+
 	public AddressAthlete() {
 	}
+	
+	public AddressAthlete(Long id) {
+		this.id = id;
+	}
+	
 	
 	public AddressAthlete(Long id, String street, String localNumber, String complement, String zipCode, String neighborhood,
 			String city, String state, String country) {
@@ -133,5 +139,9 @@ public class AddressAthlete implements Serializable {
 			return false;
 		AddressAthlete other = (AddressAthlete) obj;
 		return Objects.equals(city, other.city);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
 	}
 }

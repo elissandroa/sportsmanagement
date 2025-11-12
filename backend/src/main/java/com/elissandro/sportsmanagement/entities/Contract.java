@@ -37,6 +37,10 @@ public class Contract implements Serializable {
 	public Contract() {
 	}
 	
+	public Contract(Long id) {
+		this.id = id;
+	}
+	
 	public Contract(Long id, Boolean hasContract, Double salary, String duration, LocalDate startDate,
 			LocalDate endDate, String contractPdf, ContractType contractType) {
 		this.id = id;
@@ -128,5 +132,9 @@ public class Contract implements Serializable {
 			return false;
 		Contract other = (Contract) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athletes.add(entity);
 	}
 }

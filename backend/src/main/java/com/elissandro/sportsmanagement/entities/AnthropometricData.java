@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Table(name = "tb_anthropometric_data")
 public class AnthropometricData implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,16 +25,19 @@ public class AnthropometricData implements Serializable {
 	private Double leanMass;
 	private Double bmi;
 	private LocalDate measurementDate;
-	
+
 	@OneToOne(mappedBy = "anthropometricData")
 	private Athlete athlete;
-	
-	
+
 	public AnthropometricData() {
 	}
-	
-	public AnthropometricData(Long id, Double weight, Double height, Double bodyFat,
-			Double leanMass, Double bmi, LocalDate measurementDate) {
+
+	public AnthropometricData(Long id) {
+		this.id = id;
+	}
+
+	public AnthropometricData(Long id, Double weight, Double height, Double bodyFat, Double leanMass, Double bmi,
+			LocalDate measurementDate) {
 		this.id = id;
 		this.weight = weight;
 		this.height = height;
@@ -51,7 +54,6 @@ public class AnthropometricData implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public Double getWeight() {
 		return weight;
@@ -116,6 +118,10 @@ public class AnthropometricData implements Serializable {
 			return false;
 		AnthropometricData other = (AnthropometricData) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
 	}
 
 }

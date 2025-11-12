@@ -28,6 +28,10 @@ public class PersonalDocuments implements Serializable {
 	public PersonalDocuments() {
 	}
 	
+	public PersonalDocuments(Long id) {
+		this.id = id;
+	}
+	
 	public PersonalDocuments(Long id, String cpf, String rg, String passport, String bidCBF) {
 		this.id = id;
 		this.cpf = cpf;
@@ -91,6 +95,10 @@ public class PersonalDocuments implements Serializable {
 			return false;
 		PersonalDocuments other = (PersonalDocuments) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
 	}
 
 }

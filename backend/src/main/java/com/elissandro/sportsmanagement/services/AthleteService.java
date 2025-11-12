@@ -1,8 +1,5 @@
 package com.elissandro.sportsmanagement.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,31 +7,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elissandro.sportsmanagement.dtos.AthleteDTO;
-import com.elissandro.sportsmanagement.dtos.CategoryDTO;
-import com.elissandro.sportsmanagement.dtos.ContractDTO;
 import com.elissandro.sportsmanagement.entities.AddressAthlete;
 import com.elissandro.sportsmanagement.entities.AnthropometricData;
 import com.elissandro.sportsmanagement.entities.Athlete;
 import com.elissandro.sportsmanagement.entities.AthleteStatistics;
-import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Contract;
 import com.elissandro.sportsmanagement.entities.MedicalRecord;
+import com.elissandro.sportsmanagement.entities.Penalty;
 import com.elissandro.sportsmanagement.entities.PersonalDocuments;
-import com.elissandro.sportsmanagement.entities.PlayerPosition;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionEffort;
 import com.elissandro.sportsmanagement.entities.SubjectivePerceptionRecovery;
-import com.elissandro.sportsmanagement.enums.InjuryStatus;
-import com.elissandro.sportsmanagement.repositories.AddressAthleteRepository;
-import com.elissandro.sportsmanagement.repositories.AnthropometricDataRepository;
 import com.elissandro.sportsmanagement.repositories.AthleteRepository;
-import com.elissandro.sportsmanagement.repositories.AthleteStatisticsRepository;
+import com.elissandro.sportsmanagement.repositories.CategoryRepository;
 import com.elissandro.sportsmanagement.repositories.ContractRepository;
 import com.elissandro.sportsmanagement.repositories.MedicalRecordRepository;
-import com.elissandro.sportsmanagement.repositories.PersonalDocumentsRepository;
+import com.elissandro.sportsmanagement.repositories.PenaltyRepository;
+import com.elissandro.sportsmanagement.repositories.PlayerPositionRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionEffortRepository;
 import com.elissandro.sportsmanagement.repositories.SubjectivePerceptionRecoveryRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
+import com.elissandro.sportsmanagement.utils.EntityListSaver;
 
 @Service
 public class AthleteService {
@@ -43,39 +36,35 @@ public class AthleteService {
 	private AthleteRepository repository;
 
 	@Autowired
-	private AddressAthleteRepository addressRepository;
-
-	@Autowired
-	private PersonalDocumentsRepository personalDocumentsRepository;
-
-	@Autowired
 	private ContractRepository contractRepository;
-	
-	@Autowired
-	private AthleteStatisticsRepository athleteStatisticsRepository;
-	
-	@Autowired
-	private AnthropometricDataRepository anthropometricDataRepository;
-	
+
 	@Autowired
 	private SubjectivePerceptionEffortRepository subjectivePerceptionEffortRepository;
-	
+
 	@Autowired
 	private SubjectivePerceptionRecoveryRepository subjectivePerceptionRecoveryRepository;
-	
+
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 
+	@Autowired
+	private PenaltyRepository penaltyRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private PlayerPositionRepository playerPositionRepository;
+
 	@Transactional(readOnly = true)
 	public AthleteDTO findById(Long id) {
-		var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Athlete not found"));
+		var entity = EntityListSaver.findById(id, repository);
 		return new AthleteDTO(entity);
 	}
 
 	@Transactional(readOnly = true)
 	public Page<AthleteDTO> findAll(Pageable pageable) {
-		Page<Athlete> page = repository.findAll(pageable);
-		return page.map(entity -> new AthleteDTO(entity));
+		return EntityListSaver.findAll(repository, pageable).map(entity -> new AthleteDTO(entity));
 	}
 
 	@Transactional
@@ -94,145 +83,12 @@ public class AthleteService {
 		return new AthleteDTO(entity);
 	}
 
-	private void copyDtoToEntity(AthleteDTO dto, Athlete entity) {
-		AddressAthlete address = new AddressAthlete();
-		if (dto.getAddress() != null && dto.getAddress().getId() != null) {
-		    address.setId(dto.getAddress().getId());
-		}
-		address.setStreet(dto.getAddress().getStreet());
-		address.setCity(dto.getAddress().getCity());
-		address.setState(dto.getAddress().getState());
-		address.setZipCode(dto.getAddress().getZipCode());
-		address.setComplement(dto.getAddress().getComplement());
-		address.setCountry(dto.getAddress().getCountry());
-		address.setLocalNumber(dto.getAddress().getLocalNumber());
-		address.setNeighborhood(dto.getAddress().getNeighborhood());
-		address = addressRepository.save(address);
-		
-		PersonalDocuments personalDocuments = new PersonalDocuments();
-		if (dto.getPersonalDocuments() != null && dto.getPersonalDocuments().getId() != null) {
-		    personalDocuments.setId(dto.getPersonalDocuments().getId());
-		}
-		personalDocuments.setCpf(dto.getPersonalDocuments().getCpf());
-		personalDocuments.setRg(dto.getPersonalDocuments().getRg());
-		personalDocuments.setPassport(dto.getPersonalDocuments().getPassport());
-		personalDocuments.setBidCBF(dto.getPersonalDocuments().getBidCBF());
-		personalDocuments = personalDocumentsRepository.save(personalDocuments);
-		
-		AnthropometricData anthropometricData = new AnthropometricData();
-		if (dto.getAnthropometricData() != null && dto.getAnthropometricData().getId() != null) {
-		    anthropometricData.setId(dto.getAnthropometricData().getId());
-		}
-		
-		
-		
-		Double bmiValue = calculateBmi(dto.getAnthropometricData().getWeight(), dto.getAnthropometricData().getHeight());
-		
-		
-		anthropometricData.setBmi(bmiValue);
-		anthropometricData.setBodyFat(dto.getAnthropometricData().getBodyFat());
-		anthropometricData.setHeight(dto.getAnthropometricData().getHeight());
-		anthropometricData.setLeanMass(dto.getAnthropometricData().getLeanMass());
-		anthropometricData.setMeasurementDate(dto.getAnthropometricData().getMeasurementDate());
-		anthropometricData.setWeight(dto.getAnthropometricData().getWeight());
-		anthropometricData = anthropometricDataRepository.save(anthropometricData);
-		
-		AthleteStatistics athleteStatistics = new AthleteStatistics();
-		if (dto.getAthleteStatistics() != null && dto.getAthleteStatistics().getId() != null) {
-		    athleteStatistics.setId(dto.getAthleteStatistics().getId());
-		}		
-		athleteStatistics.setAveragePse(dto.getAthleteStatistics().getAveragePse());
-		athleteStatistics.setAveragePsr(dto.getAthleteStatistics().getAveragePsr());
-		athleteStatistics.setAssists(dto.getAthleteStatistics().getAssists());
-		athleteStatistics.setGoalsScored(dto.getAthleteStatistics().getGoalsScored());
-		athleteStatistics.setInjuries(dto.getAthleteStatistics().getInjuries());
-		athleteStatistics.setMinutesPlayed(dto.getAthleteStatistics().getMinutesPlayed());
-		athleteStatistics.setMatchesPlayed(dto.getAthleteStatistics().getMatchesPlayed());
-		athleteStatistics.setRedCards(dto.getAthleteStatistics().getRedCards());
-		athleteStatistics.setYellowCards(dto.getAthleteStatistics().getYellowCards());
-		athleteStatistics.setLastUpdated(LocalDateTime.now());
-		athleteStatistics = athleteStatisticsRepository.save(athleteStatistics);
-		
-		MedicalRecord medicalRecord = new MedicalRecord();
-		
-		for(var mrDTO : dto.getMedicalRecords()) {
-			if(mrDTO.getId() != null) {
-				medicalRecord.setId(mrDTO.getId());
-			}
-			
-			medicalRecord.setActualReturn(mrDTO.getActualReturn());
-			medicalRecord.setBodyPart(mrDTO.getBodyPart());
-			medicalRecord.setBodyPartCoordinates(mrDTO.getBodyPartCoordinates());
-			if(mrDTO.getCreatedAt() == null) {
-				medicalRecord.setCreatedAt(LocalDate.now());
-			} else {
-				medicalRecord.setUpdatedAt(LocalDate.now());
-			}
-			medicalRecord.setDescription(mrDTO.getDescription());
-			medicalRecord.setExpectedReturn(mrDTO.getExpectedReturn());
-			medicalRecord.setInjuryDate(mrDTO.getInjuryDate());
-			medicalRecord.setSeverity(mrDTO.getSeverity());
-			if(mrDTO.getRemainingDays() == 0) {
-				medicalRecord.setStatus(InjuryStatus.RECOVERED);
-			} else {
-				medicalRecord.setStatus(mrDTO.getStatus());
-			}
-			medicalRecord.setTreatedBy(mrDTO.getTreatedBy());
-			medicalRecord.setTreatment(mrDTO.getTreatment());
-			medicalRecord.setType(mrDTO.getType());			
-			medicalRecord = medicalRecordRepository.save(medicalRecord);
-			
-			entity.getMedicalRecords().add(medicalRecord);
-		}
-		
-		for(var speDTO : dto.getSubjectivePerceptionEfforts()) {
-			SubjectivePerceptionEffort spe = new SubjectivePerceptionEffort();
-			
-			if(speDTO.getId() != null) {
-				spe.setId(speDTO.getId());
-			}
-			
-			spe.setDate(dto.getBirthDate());
-			spe.setDuration(dto.getSubjectivePerceptionEfforts().get(0).getDuration());
-			spe.setPseValue(dto.getSubjectivePerceptionEfforts().get(0).getPseValue());
-			spe.setObservations(dto.getSubjectivePerceptionEfforts().get(0).getObservations());
-			spe.setRecordedBy(dto.getSubjectivePerceptionEfforts().get(0).getRecordedBy());
-			spe.setRecordedAt(dto.getSubjectivePerceptionEfforts().get(0).getRecordedAt());
-			spe.setValid(dto.getSubjectivePerceptionEfforts().get(0).isValid());
-			spe = subjectivePerceptionEffortRepository.save(spe);
-			entity.getSubjectivePerceptionEfforts().add(spe);
-		}
-		
-		SubjectivePerceptionRecovery spr = new SubjectivePerceptionRecovery();
-		
-		for(var sprDTO : dto.getSubjectivePerceptionRecoveries()) {
-			if(sprDTO.getId() != null) {
-				spr.setId(sprDTO.getId());
-			}
-			
-			spr.setAppetiteLevel(dto.getSubjectivePerceptionRecoveries().get(0).getAppetiteLevel());
-			spr.setCreatedAt(dto.getSubjectivePerceptionRecoveries().get(0).getCreatedAt());
-			spr.setDate(dto.getBirthDate());
-			spr.setHydrationLevel(dto.getSubjectivePerceptionRecoveries().get(0).getHydrationLevel());
-			spr.setFatiqueLevel(dto.getSubjectivePerceptionRecoveries().get(0).getFatiqueLevel());
-			spr.setMotivationLevel(dto.getSubjectivePerceptionRecoveries().get(0).getMotivationLevel());
-			spr.setRecordedBy(dto.getSubjectivePerceptionRecoveries().get(0).getRecordedBy());
-			spr.setSleepQuality(dto.getSubjectivePerceptionRecoveries().get(0).getSleepQuality());
-			spr.setPsrValue(dto.getSubjectivePerceptionRecoveries().get(0).getPsrValue());
-			spr.setObservations(dto.getSubjectivePerceptionRecoveries().get(0).getObservations());
-			spr.setIsValid(dto.getSubjectivePerceptionRecoveries().get(0).getIsValid());
-			spr.setMuscleAching(dto.getSubjectivePerceptionRecoveries().get(0).getMuscleAching());
-			spr.setSleepHours(dto.getSubjectivePerceptionRecoveries().get(0).getSleepHours());
-			spr.setStressLevel(dto.getSubjectivePerceptionRecoveries().get(0).getStressLevel());
-			spr.setNotes(dto.getSubjectivePerceptionRecoveries().get(0).getNotes());
-			spr.setType(dto.getSubjectivePerceptionRecoveries().get(0).getType());
-			spr = subjectivePerceptionRecoveryRepository.save(spr);
-			
-			entity.getSubjectivePerceptionRecoveries().add(spr);
-		}
-		
-		
+	@Transactional
+	public void copyDtoToEntity(AthleteDTO dto, Athlete entity) {
 
+		// ======================
+		// 🔹 Dados básicos
+		// ======================
 		entity.setName(dto.getName());
 		entity.setPhoto(dto.getPhoto());
 		entity.setPosition(dto.getPosition());
@@ -241,68 +97,202 @@ public class AthleteService {
 		entity.setHeight(dto.getHeight());
 		entity.setWeight(dto.getWeight());
 		entity.setPreferredFoot(dto.getPreferredFoot());
-		entity.setActive(dto.isActive());
 		entity.setPhoneNumber(dto.getPhoneNumber());
-		entity.setAddress(address);
-		entity.setPersonalDocuments(personalDocuments);
-		entity.setAthleteStatistics(athleteStatistics);
-		entity.setAnthropometricData(anthropometricData);
+		entity.setActive(dto.isActive());
 
-		entity.getCategories().clear();
-		for (CategoryDTO catDto : dto.getCategories()) {
-			Category category = new Category();
-			category.setId(catDto.getId());
-			entity.getCategories().add(category);
+		// ======================
+		// 🔹 Endereço
+		// ======================
+		if (dto.getAddress() != null) {
+			AddressAthlete address = dto.getAddress().getId() != null ? new AddressAthlete(dto.getAddress().getId())
+					: new AddressAthlete();
+			address.setStreet(dto.getAddress().getStreet());
+			address.setLocalNumber(dto.getAddress().getLocalNumber());
+			address.setComplement(dto.getAddress().getComplement());
+			address.setZipCode(dto.getAddress().getZipCode());
+			address.setNeighborhood(dto.getAddress().getNeighborhood());
+			address.setCity(dto.getAddress().getCity());
+			address.setState(dto.getAddress().getState());
+			address.setCountry(dto.getAddress().getCountry());
+			address.setAthlete(entity);
+			entity.setAddress(address);
 		}
-		
+
+		// ======================
+		// 🔹 Documentos pessoais
+		// ======================
+		if (dto.getPersonalDocuments() != null) {
+			PersonalDocuments docs = dto.getPersonalDocuments().getId() != null
+					? new PersonalDocuments(dto.getPersonalDocuments().getId())
+					: new PersonalDocuments();
+			docs.setCpf(dto.getPersonalDocuments().getCpf());
+			docs.setRg(dto.getPersonalDocuments().getRg());
+			docs.setPassport(dto.getPersonalDocuments().getPassport());
+			docs.setBidCBF(dto.getPersonalDocuments().getBidCBF());
+			docs.setAthlete(entity);
+			entity.setPersonalDocuments(docs);
+		}
+
+		// ======================
+		// 🔹 Dados antropométricos
+		// ======================
+		if (dto.getAnthropometricData() != null) {
+			AnthropometricData anthropometricData = dto.getAnthropometricData().getId() != null
+					? new AnthropometricData(dto.getAnthropometricData().getId())
+					: new AnthropometricData();
+
+			anthropometricData.setWeight(dto.getAnthropometricData().getWeight());
+			anthropometricData.setHeight(dto.getAnthropometricData().getHeight());
+			anthropometricData.setBodyFat(dto.getAnthropometricData().getBodyFat());
+			anthropometricData.setLeanMass(dto.getAnthropometricData().getLeanMass());
+
+			// Calcula o BMI e formata com 1 casa decimal
+			double bmi = dto.getAnthropometricData().getWeight() / Math.pow(dto.getAnthropometricData().getHeight(), 2);
+			anthropometricData.setBmi(Math.round(bmi * 10.0) / 10.0);
+
+			anthropometricData.setMeasurementDate(dto.getAnthropometricData().getMeasurementDate());
+			anthropometricData.setAthlete(entity);
+			entity.setAnthropometricData(anthropometricData);
+		}
+
+		// ======================
+		// 🔹 Estatísticas do atleta
+		// ======================
+		if (dto.getAthleteStatistics() != null) {
+			AthleteStatistics stats = dto.getAthleteStatistics().getId() != null
+					? new AthleteStatistics(dto.getAthleteStatistics().getId())
+					: new AthleteStatistics();
+
+			stats.setMatchesPlayed(dto.getAthleteStatistics().getMatchesPlayed());
+			stats.setMinutesPlayed(dto.getAthleteStatistics().getMinutesPlayed());
+			stats.setGoalsScored(dto.getAthleteStatistics().getGoalsScored());
+			stats.setAssists(dto.getAthleteStatistics().getAssists());
+			stats.setYellowCards(dto.getAthleteStatistics().getYellowCards());
+			stats.setRedCards(dto.getAthleteStatistics().getRedCards());
+			stats.setInjuries(dto.getAthleteStatistics().getInjuries());
+			stats.setAveragePse(dto.getAthleteStatistics().getAveragePse());
+			stats.setAveragePsr(dto.getAthleteStatistics().getAveragePsr());
+			stats.setAthlete(entity);
+			entity.setAthleteStatistics(stats);
+		}
+
+		// ======================
+		// 🔹 Contratos
+		// ======================
 		entity.getContracts().clear();
-		for(ContractDTO contDTO : dto.getContracts()) {
-			Contract contract = new Contract();
-			if(contDTO.getId() != null) {
-				contract.setId(contDTO.getId());
-			}
-			contract.setContractType(contDTO.getContractType());
-			contract.setStartDate(contDTO.getStartDate());
-			contract.setEndDate(contDTO.getEndDate());
-			contract.setDuration(contDTO.getDuration());
-			contract.setHasContract(contDTO.getHasContract());
-			contract.setSalary(contDTO.getSalary());
-			contract.setContractPdf(contDTO.getContractPdf());
-			entity.getContracts().add(contract);
-			contractRepository.save(contract);
-		}
-		
+		entity.getContracts().addAll(EntityListSaver.saveAll(dto.getContracts(), contractRepository,
+				c -> c.getId() != null ? new Contract(c.getId()) : new Contract(), (c, contract) -> {
+					contract.setHasContract(c.getHasContract());
+					contract.setSalary(c.getSalary());
+					contract.setDuration(c.getDuration());
+					contract.setStartDate(c.getStartDate());
+					contract.setEndDate(c.getEndDate());
+					contract.setContractPdf(c.getContractPdf());
+					contract.setContractType(c.getContractType());
+					contract.setAthlete(entity);
+				}));
+
+		// ======================
+		// 🔹 Penalidades
+		// ======================
+		entity.getPenalties().clear();
+		entity.getPenalties().addAll(EntityListSaver.saveAll(dto.getPenalties(), penaltyRepository,
+				p -> p.getId() != null ? new Penalty(p.getId()) : new Penalty(), (p, penalty) -> {
+					penalty.setType(p.getType());
+					penalty.setReason(p.getReason());
+					penalty.setDate(p.getDate());
+					penalty.setSuspentionGames(p.getSuspentionGames());
+					penalty.setServed(p.getServed());
+					penalty.setAthlete(entity);
+				}));
+
+		// ======================
+		// 🔹 Registros médicos
+		// ======================
+		entity.getMedicalRecords().clear();
+		entity.getMedicalRecords().addAll(EntityListSaver.saveAll(dto.getMedicalRecords(), medicalRecordRepository,
+				m -> m.getId() != null ? new MedicalRecord(m.getId()) : new MedicalRecord(), (m, medical) -> {
+					medical.setType(m.getType());
+					medical.setBodyPart(m.getBodyPart());
+					medical.setBodyPartCoordinates(m.getBodyPartCoordinates());
+					medical.setDescription(m.getDescription());
+					medical.setInjuryDate(m.getInjuryDate());
+					medical.setExpectedReturn(m.getExpectedReturn());
+					medical.setActualReturn(m.getActualReturn());
+					medical.setStatus(m.getStatus());
+					medical.setTreatment(m.getTreatment());
+					medical.setSeverity(m.getSeverity());
+					medical.setDaysOut(m.getDaysOut());
+					medical.setRemainingDays(m.getRemainingDays());
+					medical.setAthlete(entity);
+				}));
+
+		// ======================
+		// 🔹 PSE (Esforço)
+		// ======================
+		entity.getSubjectivePerceptionEfforts().clear();
+		entity.getSubjectivePerceptionEfforts().addAll(EntityListSaver.saveAll(dto.getSubjectivePerceptionEfforts(),
+				subjectivePerceptionEffortRepository,
+				e -> e.getId() != null ? new SubjectivePerceptionEffort(e.getId()) : new SubjectivePerceptionEffort(),
+				(e, effort) -> {
+					effort.setDate(e.getDate());
+					effort.setPseValue(e.getPseValue());
+					effort.setDuration(e.getDuration());
+					effort.setRecordedBy(e.getRecordedBy());
+					effort.setValid(e.isValid());
+					effort.setAthlete(entity);
+				}));
+
+		// ======================
+		// 🔹 PSR (Recuperação)
+		// ======================
+		entity.getSubjectivePerceptionRecoveries().clear();
+		entity.getSubjectivePerceptionRecoveries()
+				.addAll(EntityListSaver.saveAll(dto.getSubjectivePerceptionRecoveries(),
+						subjectivePerceptionRecoveryRepository,
+						r -> r.getId() != null ? new SubjectivePerceptionRecovery(r.getId())
+								: new SubjectivePerceptionRecovery(),
+						(r, recovery) -> {
+							recovery.setType(r.getType());
+							recovery.setDate(r.getDate());
+							recovery.setPsrValue(r.getPsrValue());
+							recovery.setFatiqueLevel(r.getFatiqueLevel());
+							recovery.setMotivationLevel(r.getMotivationLevel());
+							recovery.setStressLevel(r.getStressLevel());
+							recovery.setSleepHours(r.getSleepHours());
+							recovery.setSleepQuality(r.getSleepQuality());
+							recovery.setMuscleAching(r.getMuscleAching());
+							recovery.setHydrationLevel(r.getHydrationLevel());
+							recovery.setAppetiteLevel(r.getAppetiteLevel());
+							recovery.setNotes(r.getNotes());
+							recovery.setIsValid(r.getIsValid());
+							recovery.setRecordedBy(r.getRecordedBy());
+							recovery.setAthlete(entity);
+						}));
+
+		// ======================
+		// 🔹 Categorias e Posições
+		// ======================
+		entity.getCategories().clear();
+		dto.getCategories()
+				.forEach(cat -> entity.getCategories().add(categoryRepository.getReferenceById(cat.getId())));
+
 		entity.getPlayerPositions().clear();
-		for (var posDto : dto.getPlayerPositions()) {
-			var position = new PlayerPosition();
-			position.setId(posDto.getId());
-			entity.getPlayerPositions().add(position);
-		}
+		dto.getPlayerPositions().forEach(
+				pos -> entity.getPlayerPositions().add(playerPositionRepository.getReferenceById(pos.getId())));
 
 	}
 
-	
 	@Transactional
 	public void delete(Long id) {
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Athlete not found");
 		}
 		try {
-			repository.deleteById(id);
+			EntityListSaver.deleteById(id, repository);
 		} catch (Exception e) {
 			throw new DatabaseException("Could not delete Athlete with id " + id);
 		}
 	}
-	
-	private Double calculateBmi(Double weight, Double height) {
-		if (weight != null && height != null && height > 0) {
-			Double bmi = weight / (height * height);
-			return Math.round(bmi * 10.0) / 10.0;
-		}
-		return null;
-		
-	}
-	
-	
 
 }
