@@ -13,40 +13,30 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_category")
-public class Category implements Serializable {
+@Table(name = "tb_permission")
+public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
-	String name;
+	private Long id;
+	private String name;
+	private String description;
+	private String module;
+	private Boolean active;
 	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Competition> competitions = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Opponent> opponents = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Athlete> athletes = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Material> materials = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Training> trainings = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "categories")
+	@ManyToMany(mappedBy = "permissions")
 	private Set<Staff> staffs = new HashSet<>();
 	
-	public Category() {
-		
+	public Permission() {
 	}
 	
-	public Category(Long id, String name) {
+	public Permission(Long id, String name, String description, String module, Boolean active) {
 		this.id = id;
 		this.name = name;
+		this.description = description;
+		this.module = module;
+		this.active = active;
 	}
 
 	public Long getId() {
@@ -65,6 +55,30 @@ public class Category implements Serializable {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getModule() {
+		return module;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -78,7 +92,7 @@ public class Category implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Permission other = (Permission) obj;
 		return Objects.equals(id, other.id);
 	}
 }
