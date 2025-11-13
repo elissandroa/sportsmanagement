@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Training;
 import com.elissandro.sportsmanagement.enums.TrainingStatus;
 
@@ -15,7 +14,7 @@ import jakarta.persistence.Enumerated;
 
 public class TrainingDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private Integer trainingNumber;
 	private LocalDate date;
@@ -30,14 +29,17 @@ public class TrainingDTO implements Serializable {
 	private TrainingStatus status;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private List<Category> categories = new ArrayList<>();
-	
+
+	private List<CategoryDTO> categories = new ArrayList<>();
+
+	private List<AttendanceDTO> attendances = new ArrayList<>();
+
 	public TrainingDTO() {
 	}
-	
+
 	public TrainingDTO(Long id, Integer trainingNumber, LocalDate date, String time, Integer mesoCycleNumber,
-			Integer microCycleNumber, Integer macroCycleNumber, Integer playerCount, String objective,
-			Long scheduledBy, TrainingStatus status) {
+			Integer microCycleNumber, Integer macroCycleNumber, Integer playerCount, String objective, Long scheduledBy,
+			TrainingStatus status) {
 		this.id = id;
 		this.trainingNumber = trainingNumber;
 		this.date = date;
@@ -50,7 +52,7 @@ public class TrainingDTO implements Serializable {
 		this.scheduledBy = scheduledBy;
 		this.status = status;
 	}
-	
+
 	public TrainingDTO(Training entity) {
 		this.id = entity.getId();
 		this.trainingNumber = entity.getTrainingNumber();
@@ -65,8 +67,14 @@ public class TrainingDTO implements Serializable {
 		this.status = entity.getStatus();
 		this.createdAt = entity.getCreatedAt();
 		this.updatedAt = entity.getUpdatedAt();
-		entity.getCategories().forEach(cat -> this.categories.add(cat));
+		entity.getCategories().forEach(cat -> this.categories.add(new CategoryDTO(cat)));
+		
+		for(AttendanceDTO att : entity.getAttendances().stream().map(attEntity -> new AttendanceDTO(attEntity)).toList()) {
+			this.attendances.add(att);
+		}
 	}
+
+	
 
 	public Long getId() {
 		return id;
@@ -156,7 +164,7 @@ public class TrainingDTO implements Serializable {
 		this.status = status;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
@@ -175,6 +183,9 @@ public class TrainingDTO implements Serializable {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
+	public List<AttendanceDTO> getAttendances() {
+		return attendances;
+	}
 
 }

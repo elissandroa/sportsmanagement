@@ -91,7 +91,7 @@ public class Athlete implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "penalty_id"))
 	private Set<Penalty> penalties = new HashSet<>();
 	
-			
+
 	public Athlete() {
 	}
 	

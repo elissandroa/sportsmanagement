@@ -64,7 +64,7 @@ public class AthleteService {
 
 	@Transactional(readOnly = true)
 	public Page<AthleteDTO> findAll(Pageable pageable) {
-		return EntityListSaver.findAll(repository, pageable).map(entity -> new AthleteDTO(entity));
+		return EntityListSaver.findAll(repository, pageable).map(entity -> new AthleteDTO(entity, true));
 	}
 
 	@Transactional

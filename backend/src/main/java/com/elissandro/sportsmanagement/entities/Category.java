@@ -34,6 +34,9 @@ public class Category implements Serializable {
 	@ManyToMany(mappedBy = "categories")
 	private Set<Material> materials = new HashSet<>();
 	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Training> trainings = new HashSet<>();
+	
 	public Category() {
 		
 	}

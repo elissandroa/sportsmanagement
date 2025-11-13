@@ -21,34 +21,34 @@ public class AthleteDTO implements Serializable {
 	private String preferredFoot;
 	private boolean isActive;
 	private String phoneNumber;
-	
+
 	private AddressAthleteDTO address;
-	
+
 	private PersonalDocumentsDTO personalDocuments;
-	
+
 	private List<CategoryDTO> categories = new ArrayList<>();
-	
+
 	private List<PlayerPositionDTO> playerPositions = new ArrayList<>();
-	
+
 	private List<ContractDTO> contracts = new ArrayList<>();
-	
+
 	private AthleteStatisticsDTO athleteStatistics;
-	
+
 	private List<SubjectivePerceptionRecoveryDTO> subjectivePerceptionRecoveries = new ArrayList<>();
-	
+
 	private List<SubjectivePerceptionEffortDTO> subjectivePerceptionEfforts = new ArrayList<>();
-	
+
 	private AnthropometricDataDTO anthropometricData;
-	
+
 	private List<MedicalRecordDTO> medicalRecords = new ArrayList<>();
-	
+
 	private List<PenaltyDTO> penalties = new ArrayList<>();
-		
+
 	public AthleteDTO() {
 	}
-	
-	public AthleteDTO(Long id, String name, String photo, String position, LocalDate birthDate, int jerseyNumber, Double height,
-			Double weight, String preferredFoot, boolean isActive, String phoneNumber) {
+
+	public AthleteDTO(Long id, String name, String photo, String position, LocalDate birthDate, int jerseyNumber,
+			Double height, Double weight, String preferredFoot, boolean isActive, String phoneNumber) {
 		this.id = id;
 		this.name = name;
 		this.photo = photo;
@@ -61,7 +61,7 @@ public class AthleteDTO implements Serializable {
 		this.isActive = isActive;
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	public AthleteDTO(Athlete entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
@@ -78,23 +78,23 @@ public class AthleteDTO implements Serializable {
 		this.personalDocuments = new PersonalDocumentsDTO(entity.getPersonalDocuments());
 		this.athleteStatistics = new AthleteStatisticsDTO(entity.getAthleteStatistics());
 		this.anthropometricData = new AnthropometricDataDTO(entity.getAnthropometricData());
-		
-		for(var p : entity.getPenalties()) {
+
+		for (var p : entity.getPenalties()) {
 			this.penalties.add(new PenaltyDTO(p));
 		}
-		
-		for(var mr : entity.getMedicalRecords()) {
+
+		for (var mr : entity.getMedicalRecords()) {
 			this.medicalRecords.add(new MedicalRecordDTO(mr));
 		}
-		
-		for(var spr : entity.getSubjectivePerceptionRecoveries()) {
+
+		for (var spr : entity.getSubjectivePerceptionRecoveries()) {
 			this.subjectivePerceptionRecoveries.add(new SubjectivePerceptionRecoveryDTO(spr));
 		}
-		
-		for(var spe : entity.getSubjectivePerceptionEfforts()) {
+
+		for (var spe : entity.getSubjectivePerceptionEfforts()) {
 			this.subjectivePerceptionEfforts.add(new SubjectivePerceptionEffortDTO(spe));
 		}
-		
+
 		for (var cat : entity.getCategories()) {
 			this.categories.add(new CategoryDTO(cat));
 		}
@@ -104,8 +104,28 @@ public class AthleteDTO implements Serializable {
 		for (var cont : entity.getContracts()) {
 			this.contracts.add(new ContractDTO(cont));
 		}
-		
+
 	}
+	
+	public AthleteDTO(Athlete entity, Boolean simpleRegister) {
+		this(entity);
+		if(simpleRegister) {
+			this.address = null;
+			this.personalDocuments = null;
+			this.athleteStatistics = null;
+			this.anthropometricData = null;
+			this.penalties.clear();
+			this.medicalRecords.clear();
+			this.subjectivePerceptionRecoveries.clear();
+			this.subjectivePerceptionEfforts.clear();
+			this.categories.clear();
+			this.playerPositions.clear();
+			this.contracts.clear();
+		}
+	}
+	
+	
+	
 
 	public Long getId() {
 		return id;

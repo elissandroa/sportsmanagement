@@ -38,13 +38,21 @@ public class Training extends BaseEntityAudit implements Serializable {
 	private Integer playerCount;
 	private String objective;
 	private Long scheduledBy;
+	
 	@Enumerated(EnumType.STRING)
 	private TrainingStatus status;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_training_category",
 		joinColumns = @JoinColumn(name = "training_id"),
 		inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_training_attendance",
+		joinColumns = @JoinColumn(name = "training_id"),
+		inverseJoinColumns = @JoinColumn(name = "attendance_id"))
+	private Set<Attendance> attendances = new HashSet<>();
 	
 	public Training() {
 	}
@@ -155,6 +163,10 @@ public class Training extends BaseEntityAudit implements Serializable {
 
 	public Set<Category> getCategories() {
 		return categories;
+	}
+
+	public Set<Attendance> getAttendances() {
+		return attendances;
 	}
 
 	@Override
