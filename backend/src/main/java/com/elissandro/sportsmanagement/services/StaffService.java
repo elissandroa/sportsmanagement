@@ -58,6 +58,7 @@ public class StaffService {
 		entity.setHireDate(dto.getHireDate());
 		entity.setSalary(dto.getSalary());
 		entity.setActive(dto.getActive());
+		entity.setUserId(dto.getUserId());
 		
 		entity.getPermissions().clear();
 		dto.getPermissions().forEach(permDto -> {

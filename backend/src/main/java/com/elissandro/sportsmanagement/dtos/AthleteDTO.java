@@ -119,7 +119,6 @@ public class AthleteDTO implements Serializable {
 			this.subjectivePerceptionRecoveries.clear();
 			this.subjectivePerceptionEfforts.clear();
 			this.categories.clear();
-			this.playerPositions.clear();
 			this.contracts.clear();
 		}
 	}

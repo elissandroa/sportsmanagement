@@ -34,6 +34,8 @@ public class Staff extends BaseEntityAudit implements Serializable {
 	private Double salary;
 	private Boolean active;
 	
+	private Long userId;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_staff_category",
 		joinColumns = @JoinColumn(name = "staff_id"),
@@ -130,6 +132,14 @@ public class Staff extends BaseEntityAudit implements Serializable {
 
 	public Set<Permission> getPermissions() {
 		return permissions;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	@Override

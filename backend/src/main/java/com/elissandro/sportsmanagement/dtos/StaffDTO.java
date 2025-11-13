@@ -23,6 +23,7 @@ public class StaffDTO implements Serializable {
 	private Boolean active;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private Long userId;
 	
 	private List<Category> categories = new ArrayList<>();
 	
@@ -54,6 +55,7 @@ public class StaffDTO implements Serializable {
 		this.active = entity.getActive();
 		this.createdAt = entity.getCreatedAt();
 		this.updatedAt = entity.getUpdatedAt();
+		this.userId = entity.getUserId();
 		entity.getCategories().forEach(cat -> this.categories.add(cat));
 		entity.getPermissions().forEach(perm -> this.permissions.add(perm));
 	}
@@ -144,5 +146,13 @@ public class StaffDTO implements Serializable {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 }
