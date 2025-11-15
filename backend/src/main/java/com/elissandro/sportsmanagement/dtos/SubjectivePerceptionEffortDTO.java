@@ -45,6 +45,19 @@ public class SubjectivePerceptionEffortDTO implements Serializable {
 		this.isValid = entity.isValid();
 	}
 	
+	public SubjectivePerceptionEffort toEntity() {
+		SubjectivePerceptionEffort entity = new SubjectivePerceptionEffort();
+		entity.setId(this.id);
+		entity.setDate(this.date);
+		entity.setPseValue(this.pseValue);
+		entity.setDuration(this.duration);
+		entity.setObservations(this.observations);
+		entity.setRecordedBy(this.recordedBy);
+		entity.setRecordedAt(this.recordedAt);
+		entity.setValid(this.isValid);
+		return entity;
+	}
+	
 	public Long getId() {
 		return id;
 	}

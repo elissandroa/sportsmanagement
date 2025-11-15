@@ -44,6 +44,17 @@ public class PenaltyDTO implements Serializable {
 		this.updatedAt = entity.getUpdatedAt();
 
 	}
+	
+	public Penalty toEntity() {
+		Penalty entity = new Penalty();
+		entity.setId(this.id);
+		entity.setType(this.type);
+		entity.setReason(this.reason);
+		entity.setDate(this.date);
+		entity.setSuspentionGames(this.suspentionGames);
+		entity.setServed(this.served);
+		return entity;
+	}
 
 	public Long getId() {
 		return id;

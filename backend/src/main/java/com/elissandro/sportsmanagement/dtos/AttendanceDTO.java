@@ -79,5 +79,6 @@ public class AttendanceDTO {
 
 	public void setAthleteId(Long athleteId) {
 		this.athleteId = athleteId;
-	}	
+	}
+	
 }

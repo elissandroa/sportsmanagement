@@ -9,6 +9,7 @@ import java.util.Set;
 import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.TrainingStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -48,10 +50,7 @@ public class Training extends BaseEntityAudit implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_training_attendance",
-		joinColumns = @JoinColumn(name = "training_id"),
-		inverseJoinColumns = @JoinColumn(name = "attendance_id"))
+	@OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)	
 	private Set<Attendance> attendances = new HashSet<>();
 	
 	public Training() {
@@ -168,6 +167,10 @@ public class Training extends BaseEntityAudit implements Serializable {
 	public Set<Attendance> getAttendances() {
 		return attendances;
 	}
+	
+	public void setTraining(Training entity) {
+		this.id = entity.getId();
+	}
 
 	@Override
 	public int hashCode() {
@@ -185,5 +188,5 @@ public class Training extends BaseEntityAudit implements Serializable {
 		Training other = (Training) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }

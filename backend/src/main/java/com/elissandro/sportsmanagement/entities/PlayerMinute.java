@@ -136,4 +136,5 @@ public class PlayerMinute {
 		PlayerMinute other = (PlayerMinute) obj;
 		return Objects.equals(id, other.id);
 	}
+
 }

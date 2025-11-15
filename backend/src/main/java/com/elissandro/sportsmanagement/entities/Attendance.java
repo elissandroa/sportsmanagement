@@ -2,15 +2,14 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,8 +25,9 @@ public class Attendance implements Serializable {
 	private LocalDateTime recordedAt;
 	private Long athleteId;
 	
-	@ManyToMany(mappedBy = "attendances")	
-	private Set<Training> trainings = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "training_id")
+	private Training training;
 	
 	public Attendance() {
 	}
@@ -70,7 +70,20 @@ public class Attendance implements Serializable {
 
 	public void setRecordedAt(LocalDateTime recordedAt) {
 		this.recordedAt = recordedAt;
+	}	
+	
+	public Long getAthleteId() {
+		return athleteId;
 	}
+
+	public void setAthleteId(Long athleteId) {
+		this.athleteId = athleteId;
+	}
+	
+	public void setTraining(Training entity) {
+		this.training = entity;
+	}
+	
 
 
 	@Override
@@ -90,12 +103,4 @@ public class Attendance implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	public Long getAthleteId() {
-		return athleteId;
-	}
-
-	public void setAthleteId(Long athleteId) {
-		this.athleteId = athleteId;
-	}
-	
 }

@@ -15,8 +15,6 @@ public class PlayerMinuteDTO {
 	private Integer exitMinute;
 	private Integer totalMinutes;
 	private LocalDateTime recordedAt;
-	private MatchDTO match;
-	private AthleteDTO player;
 	
 	public PlayerMinuteDTO() {
 	}
@@ -44,6 +42,7 @@ public class PlayerMinuteDTO {
 		this.exitMinute = entity.getExitMinute();
 		this.recordedAt = entity.getRecordedAt();
 		this.position = entity.getPosition();
+		this.totalMinutes = entity.calculateTotalMinutes();
 	}
 
 	public Long getId() {
@@ -116,14 +115,6 @@ public class PlayerMinuteDTO {
 
 	public void setRecordedAt(LocalDateTime recordedAt) {
 		this.recordedAt = recordedAt;
-	}
-
-	public MatchDTO getMatch() {
-		return match;
-	}
-
-	public AthleteDTO getPlayer() {
-		return player;
 	}
 
 	public Integer getTotalMinutes() {

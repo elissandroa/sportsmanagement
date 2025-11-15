@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.elissandro.sportsmanagement.dtos.AthleteDTO;
 import com.elissandro.sportsmanagement.dtos.PlayerMinuteDTO;
 import com.elissandro.sportsmanagement.entities.PlayerMinute;
+import com.elissandro.sportsmanagement.repositories.AthleteRepository;
 import com.elissandro.sportsmanagement.repositories.PlayerMinuteRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
@@ -22,7 +23,7 @@ public class PlayerMinuteService {
 	private PlayerMinuteRepository repository;
 
 	@Autowired
-	private AthleteService athleteService;
+	private AthleteRepository athleteRepository;
 
 	@Transactional(readOnly = true)
 	public PlayerMinuteDTO findById(Long id) {
@@ -60,7 +61,8 @@ public class PlayerMinuteService {
 		}
 		try {
 			AthleteDTO athlete = new AthleteDTO();
-			athlete = athleteService.findById(dto.getPlayerId());
+			athlete = new AthleteDTO(athleteRepository.findById(dto.getPlayerId()).orElseThrow(
+					() -> new ResourceNotFoundException("Athlete not found for id " + dto.getPlayerId())));
 			entity.setMatchId(dto.getMatchId());
 			entity.setPlayerId(dto.getPlayerId());
 			entity.setPlayerName(athlete.getName());

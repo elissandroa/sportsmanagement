@@ -2,6 +2,7 @@ package com.elissandro.sportsmanagement.dtos;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 	private Integer psrValue;
 	private String observations;
 	private Long RecordedBy;
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	private Integer fatiqueLevel;
 	private Integer motivationLevel;
 	private Integer stressLevel;
@@ -36,7 +38,7 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 	}
 	
 	public SubjectivePerceptionRecoveryDTO(Long id, InjuryType type, LocalDate date, Integer psrValue, String observations,
-			Long recordedBy, LocalDate createdAt, Integer fatiqueLevel, Integer motivationLevel, Integer stressLevel,
+			Long recordedBy, LocalDateTime createdAt, LocalDateTime updatedAt, Integer fatiqueLevel, Integer motivationLevel, Integer stressLevel,
 			Float sleepHours, Integer sleepQuality, Integer muscleAching, Integer hydrationLevel,
 			Integer appetiteLevel, String notes, Boolean isValid) {
 		this.id = id;
@@ -76,7 +78,32 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 		this.notes = entity.getNotes();
 		this.isValid =  entity.getIsValid();
 		this.type = entity.getType();
+		this.updatedAt = entity.getUpdatedAt();
+		this.createdAt = entity.getCreatedAt();
 		entity.getPainPoints().forEach(pp -> this.painPoints.add(new PainPointDTO(pp)));
+	}
+	
+	public SubjectivePerceptionRecovery toEntity() {
+		SubjectivePerceptionRecovery entity = new SubjectivePerceptionRecovery();
+		entity.setId(this.id);
+		entity.setDate(this.date);
+		entity.setPsrValue(this.psrValue);
+		entity.setObservations(this.observations);
+		entity.setRecordedBy(this.RecordedBy);
+		entity.setCreatedAt(this.createdAt);
+		entity.setFatiqueLevel(this.fatiqueLevel);
+		entity.setMotivationLevel(this.motivationLevel);
+		entity.setStressLevel(this.stressLevel);
+		entity.setSleepHours(this.sleepHours);
+		entity.setSleepQuality(this.sleepQuality);
+		entity.setMuscleAching(this.muscleAching);
+		entity.setHydrationLevel(this.hydrationLevel);
+		entity.setAppetiteLevel(this.appetiteLevel);
+		entity.setNotes(this.notes);
+		entity.setIsValid(this.isValid);
+		entity.setType(this.type);
+		entity.setUpdatedAt(this.updatedAt);
+		return entity;
 	}
 
 	public Long getId() {
@@ -119,11 +146,11 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 		RecordedBy = recordedBy;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -217,6 +244,14 @@ public class SubjectivePerceptionRecoveryDTO implements Serializable {
 
 	public List<PainPointDTO> getPainPoints() {
 		return painPoints;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 }

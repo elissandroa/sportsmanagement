@@ -2,7 +2,9 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -55,11 +58,8 @@ public class Athlete implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "player_position_id"))
 	private Set<PlayerPosition> playerPositions = new HashSet<>();
 	
-	@ManyToMany
-	@JoinTable(name = "tb_athlete_contract",
-		joinColumns = @JoinColumn(name = "athlete_id"),
-		inverseJoinColumns = @JoinColumn(name = "contract_id"))
-	private Set<Contract> contracts = new HashSet<>();
+	@OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Contract> contracts = new ArrayList<>();
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private AthleteStatistics athleteStatistics;
@@ -67,29 +67,17 @@ public class Athlete implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private AnthropometricData anthropometricData;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_athlete_subjective_perception_recovery",
-		joinColumns = @JoinColumn(name = "athlete_id"),
-		inverseJoinColumns = @JoinColumn(name = "subjective_perception_recovery_id"))
-	private Set<SubjectivePerceptionRecovery> subjectivePerceptionRecoveries = new HashSet<>();
+	@OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SubjectivePerceptionRecovery> subjectivePerceptionRecoveries = new ArrayList<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_athlete_subjective_perception_effort",
-		joinColumns = @JoinColumn(name = "athlete_id"),
-		inverseJoinColumns = @JoinColumn(name = "subjective_perception_effort_id"))
-	private Set<SubjectivePerceptionEffort> subjectivePerceptionEfforts = new HashSet<>();
+	@OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SubjectivePerceptionEffort> subjectivePerceptionEfforts = new ArrayList<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_athlete_medical_record",
-		joinColumns = @JoinColumn(name = "athlete_id"),
-		inverseJoinColumns = @JoinColumn(name = "medical_record_id"))
-	private Set<MedicalRecord> medicalRecords = new HashSet<>();
+	@OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<MedicalRecord> medicalRecords = new ArrayList<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_athlete_penalty",
-		joinColumns = @JoinColumn(name = "athlete_id"),
-		inverseJoinColumns = @JoinColumn(name = "penalty_id"))
-	private Set<Penalty> penalties = new HashSet<>();
+	@OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Penalty> penalties = new ArrayList<>();
 	
 
 	public Athlete() {
@@ -217,7 +205,7 @@ public class Athlete implements Serializable {
 		return playerPositions;
 	}
 
-	public Set<Contract> getContracts() {
+	public List<Contract> getContracts() {
 		return contracts;
 	}
 
@@ -245,20 +233,24 @@ public class Athlete implements Serializable {
 		return anthropometricData;
 	}
 
-	public Set<SubjectivePerceptionRecovery> getSubjectivePerceptionRecoveries() {
+	public List<SubjectivePerceptionRecovery> getSubjectivePerceptionRecoveries() {
 		return subjectivePerceptionRecoveries;
 	}
 
-	public Set<SubjectivePerceptionEffort> getSubjectivePerceptionEfforts() {
+	public List<SubjectivePerceptionEffort> getSubjectivePerceptionEfforts() {
 		return subjectivePerceptionEfforts;
 	}
 	
-	public Set<MedicalRecord> getMedicalRecords() {
+	public List<MedicalRecord> getMedicalRecords() {
 		return medicalRecords;
 	}
 
-	public Set<Penalty> getPenalties() {
+	public List<Penalty> getPenalties() {
 		return penalties;
+	}
+	
+	public void setSubjectivePerceptionEfforts(List<SubjectivePerceptionEffort> update) {
+		this.subjectivePerceptionEfforts = update;
 	}
 
 	@Override
@@ -278,4 +270,25 @@ public class Athlete implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
+	public List<SubjectivePerceptionRecovery> getSubjectivePerceptionRecovery() {
+		return subjectivePerceptionRecoveries;
+	}
+
+	public void setContracts(List<Contract> updatedContracts) {
+		this.contracts = updatedContracts;
+		
+	}
+
+	public void setPenalties(List<Penalty> updatedPenalties) {
+		this.penalties = updatedPenalties;
+	}
+
+	public void setMedicalRecords(List<MedicalRecord> update) {
+		this.medicalRecords = update;
+	}
+
+	public void setSubjectivePerceptionRecoveries(List<SubjectivePerceptionRecovery> update) {
+		this.subjectivePerceptionRecoveries = update;
+		
+	}
 }

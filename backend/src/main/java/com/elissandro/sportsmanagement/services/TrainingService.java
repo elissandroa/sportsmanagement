@@ -1,12 +1,16 @@
 package com.elissandro.sportsmanagement.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.elissandro.sportsmanagement.dtos.AttendanceDTO;
 import com.elissandro.sportsmanagement.dtos.TrainingDTO;
+import com.elissandro.sportsmanagement.entities.Attendance;
 import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Training;
 import com.elissandro.sportsmanagement.repositories.TrainingRepository;
@@ -41,14 +45,15 @@ public class TrainingService {
 
 	@Transactional
 	public TrainingDTO update(Long id, TrainingDTO dto) {
-		Training entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Training not found"));
+		Training entity = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Training not found"));
 		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new TrainingDTO(entity);
 	}
 
 	private void copyDtoToEntity(TrainingDTO dto, Training entity) {
-		if(dto.getId() != null) {
+		if (dto.getId() != null) {
 			entity.setId(dto.getId());
 		}
 		entity.setTrainingNumber(dto.getTrainingNumber());
@@ -61,14 +66,27 @@ public class TrainingService {
 		entity.setObjective(dto.getObjective());
 		entity.setScheduledBy(dto.getScheduledBy());
 		entity.setStatus(dto.getStatus());
-	
+
+		entity.getAttendances().clear();
+		for (AttendanceDTO attDto : dto.getAttendances()) {
+			var attendance = new Attendance();
+			if (attDto.getId() != null) {
+				attendance.setId(attDto.getId());
+			}
+			attendance.setPresent(attDto.getPresent());
+			attendance.setObservations(attDto.getObservations());
+			attendance.setRecordedAt(LocalDateTime.now());
+			attendance.setAthleteId(attDto.getAthleteId());
+			attendance.setTraining(entity);
+			entity.getAttendances().add(attendance);
+		}
+
 		entity.getCategories().clear();
 		dto.getCategories().forEach(catDto -> {
 			var category = new Category();
 			category.setId(catDto.getId());
 			entity.getCategories().add(category);
 		});
-		
 
 	}
 

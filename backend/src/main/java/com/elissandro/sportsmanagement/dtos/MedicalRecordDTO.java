@@ -68,6 +68,25 @@ public class MedicalRecordDTO implements Serializable {
 		this.daysOut = entity.getDaysOut();
 		this.remainingDays = entity.getRemainingDays();
 	}
+	
+	public MedicalRecord toEntity() {
+		MedicalRecord entity = new MedicalRecord();
+		entity.setId(this.id);
+		entity.setType(this.type);
+		entity.setBodyPart(this.bodyPart);
+		entity.setBodyPartCoordinates(this.bodyPartCoordinates);
+		entity.setDescription(this.description);
+		entity.setInjuryDate(this.injuryDate);
+		entity.setExpectedReturn(this.expectedReturn);
+		entity.setActualReturn(this.actualReturn);
+		entity.setStatus(this.status);
+		entity.setTreatment(this.treatment);
+		entity.setSeverity(this.severity);
+		entity.setTreatedBy(this.treatedBy);
+		entity.setCreatedAt(this.createdAt);
+		entity.setUpdatedAt(this.updatedAt);
+		return entity;
+	}
 
 	public Long getId() {
 		return id;

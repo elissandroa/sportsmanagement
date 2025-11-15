@@ -68,10 +68,8 @@ public class TrainingDTO implements Serializable {
 		this.createdAt = entity.getCreatedAt();
 		this.updatedAt = entity.getUpdatedAt();
 		entity.getCategories().forEach(cat -> this.categories.add(new CategoryDTO(cat)));
+		entity.getAttendances().forEach(att -> this.attendances.add(new AttendanceDTO(att)));
 		
-		for(AttendanceDTO att : entity.getAttendances().stream().map(attEntity -> new AttendanceDTO(attEntity)).toList()) {
-			this.attendances.add(att);
-		}
 	}
 
 	

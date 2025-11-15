@@ -38,6 +38,18 @@ public class PainPointDTO implements Serializable {
 		this.description = entity.getDescription();
 		this.bodyPart = entity.getBodyPart();
 	}
+	
+	public PainPoint toEntity() {
+		PainPoint entity = new PainPoint();
+		entity.setId(this.id);
+		entity.setX(this.x);
+		entity.setY(this.y);
+		entity.setIntensity(this.intensity);
+		entity.setType(this.type);
+		entity.setDescription(this.description);
+		entity.setBodyPart(this.bodyPart);
+		return entity;
+	}
 
 	public Long getId() {
 		return id;

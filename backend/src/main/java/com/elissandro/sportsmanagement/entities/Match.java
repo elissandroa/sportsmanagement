@@ -135,6 +135,10 @@ public class Match extends BaseEntityAudit implements Serializable {
 		this.matchAnalysis = matchAnalysis;
 	}
 
+	public Set<Competition> getCompetitions() {
+		return competitions;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

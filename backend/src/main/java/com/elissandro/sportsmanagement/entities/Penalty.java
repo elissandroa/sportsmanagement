@@ -2,25 +2,25 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.PenaltyType;
+import com.elissandro.sportsmanagement.utils.Identifiable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_penalty")
-public class Penalty extends BaseEntityAudit implements Serializable {
+public class Penalty extends BaseEntityAudit implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -30,17 +30,17 @@ public class Penalty extends BaseEntityAudit implements Serializable {
 	private Integer suspentionGames;
 	private Boolean served;
 
-	
-	@ManyToMany(mappedBy = "penalties")
-	private Set<Athlete> athlete = new HashSet<>();
-	
+	@ManyToOne
+	@JoinColumn(name = "athlete_id")
+	private Athlete athlete;
+
 	public Penalty() {
 	}
-	
+
 	public Penalty(Long id) {
 		this.id = id;
 	}
-	
+
 	public Penalty(Long id, PenaltyType type, String reason, LocalDate date, Integer suspentionGames, Boolean served) {
 		this.id = id;
 		this.type = type;
@@ -98,8 +98,10 @@ public class Penalty extends BaseEntityAudit implements Serializable {
 		this.served = served;
 	}
 
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
+	}
 
-	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -117,7 +119,8 @@ public class Penalty extends BaseEntityAudit implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	public void setAthlete(Athlete entity) {
-		this.athlete.add(entity);	
+	public void setPenalty(Athlete entity) {
+		this.athlete = entity;
 	}
+
 }

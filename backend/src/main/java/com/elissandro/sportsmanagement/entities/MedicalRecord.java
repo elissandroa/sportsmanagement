@@ -2,13 +2,12 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.InjuryStatus;
 import com.elissandro.sportsmanagement.enums.InjuryType;
+import com.elissandro.sportsmanagement.utils.Identifiable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,12 +15,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_medical_record")
-public class MedicalRecord extends BaseEntityAudit implements Serializable {
+public class MedicalRecord extends BaseEntityAudit implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -41,8 +41,9 @@ public class MedicalRecord extends BaseEntityAudit implements Serializable {
 	private String severity;
 	private int treatedBy;
 
-	@ManyToMany(mappedBy = "medicalRecords")
-	private Set<Athlete> athletes = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "athlete_id")
+	private Athlete athlete;
 
 	public MedicalRecord() {
 	}
@@ -163,6 +164,10 @@ public class MedicalRecord extends BaseEntityAudit implements Serializable {
 	public void setTreatedBy(int treatedBy) {
 		this.treatedBy = treatedBy;
 	}
+	
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;	
+	}
 
 	
 
@@ -223,8 +228,9 @@ public class MedicalRecord extends BaseEntityAudit implements Serializable {
 		
 	}
 
-	public void setAthlete(Athlete entity) {
-		this.athletes.add(entity);	
+	public void setMedicalRecord(Athlete entity) {
+		this.athlete = entity;
 	}
+
 
 }

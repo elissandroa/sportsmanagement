@@ -43,6 +43,19 @@ public class ContractDTO implements Serializable {
 		this.contractPdf = entity.getContractPdf();
 		this.contractType = entity.getContractType();
 	}
+	
+	public Contract toEntity() {
+		Contract contract = new Contract();
+		contract.setId(this.id);
+		contract.setHasContract(this.hasContract);
+		contract.setSalary(this.salary);
+		contract.setDuration(this.duration);
+		contract.setStartDate(this.startDate);
+		contract.setEndDate(this.endDate);
+		contract.setContractPdf(this.contractPdf);
+		contract.setContractType(this.contractType);
+		return contract;
+	}
 
 	public Long getId() {
 		return id;

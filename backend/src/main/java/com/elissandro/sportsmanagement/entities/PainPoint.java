@@ -3,15 +3,19 @@ package com.elissandro.sportsmanagement.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.elissandro.sportsmanagement.utils.Identifiable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_pain_points")
-public class PainPoint implements Serializable {
+public class PainPoint implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -24,6 +28,10 @@ public class PainPoint implements Serializable {
 	private String description;
 	private String bodyPart;
 	
+	
+	@ManyToOne
+	@JoinColumn(name = "subjective_perception_recovery_id")
+	private SubjectivePerceptionRecovery subjectivePerceptionRecovery;
 	
 	
 	public PainPoint() {
@@ -99,6 +107,11 @@ public class PainPoint implements Serializable {
 	public void setBodyPart(String bodyPart) {
 		this.bodyPart = bodyPart;
 	}
+	
+
+	public void setSubjectivePerceptionRecovery(SubjectivePerceptionRecovery entity) {
+		this.subjectivePerceptionRecovery = entity;
+	}
 
 	@Override
 	public int hashCode() {
@@ -116,5 +129,6 @@ public class PainPoint implements Serializable {
 		PainPoint other = (PainPoint) obj;
 		return Objects.equals(id, other.id);
 	}
+
 	
 }

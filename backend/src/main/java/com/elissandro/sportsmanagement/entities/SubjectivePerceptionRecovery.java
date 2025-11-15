@@ -2,24 +2,27 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
+import com.elissandro.sportsmanagement.entities.base.BaseEntityAudit;
 import com.elissandro.sportsmanagement.enums.InjuryType;
+import com.elissandro.sportsmanagement.utils.Identifiable;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_subjective_perception_recovery")
-public class SubjectivePerceptionRecovery implements Serializable {
+public class SubjectivePerceptionRecovery extends BaseEntityAudit implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -30,7 +33,6 @@ public class SubjectivePerceptionRecovery implements Serializable {
 	private Integer psrValue;
 	private String observations;
 	private Long RecordedBy;
-	private LocalDate createdAt;
 	private Integer fatiqueLevel;
 	private Integer motivationLevel;
 	private Integer stressLevel;
@@ -42,12 +44,13 @@ public class SubjectivePerceptionRecovery implements Serializable {
 	private String notes;
 	private Boolean isValid;
 	
-	@ManyToMany
-	@JoinTable(name = "tb_psr_painpoint",
-		joinColumns = @JoinColumn(name = "psr_id"),
-		inverseJoinColumns = @JoinColumn(name = "painpoint_id"))
-	private Set<PainPoint> painPoints = new HashSet<>();
+	@OneToMany(mappedBy = "subjectivePerceptionRecovery", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PainPoint> painPoints = new ArrayList<>();
+		
 	
+	@ManyToOne
+	@JoinColumn(name = "athlete_id")	
+	private Athlete athlete;
 				
 	public SubjectivePerceptionRecovery() {
 	}
@@ -57,7 +60,7 @@ public class SubjectivePerceptionRecovery implements Serializable {
 	}
 	
 	public SubjectivePerceptionRecovery(Long id, InjuryType type, LocalDate date, Integer psrValue, String observations,
-			Long recordedBy, LocalDate createdAt, Integer fatiqueLevel, Integer motivationLevel, Integer stressLevel,
+			Long recordedBy, Integer fatiqueLevel, Integer motivationLevel, Integer stressLevel,
 			Float sleepHours, Integer sleepQuality, Integer muscleAching, Integer hydrationLevel,
 			Integer appetiteLevel, String notes, Boolean isValid, 
 			AnthropometricData anthropometricData) {
@@ -67,7 +70,6 @@ public class SubjectivePerceptionRecovery implements Serializable {
 		this.psrValue = psrValue;
 		this.observations = observations;
 		RecordedBy = recordedBy;
-		this.createdAt = createdAt;
 		this.fatiqueLevel = fatiqueLevel;
 		this.motivationLevel = motivationLevel;
 		this.stressLevel = stressLevel;
@@ -118,14 +120,6 @@ public class SubjectivePerceptionRecovery implements Serializable {
 
 	public void setRecordedBy(Long recordedBy) {
 		RecordedBy = recordedBy;
-	}
-
-	public LocalDate getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDate createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	public Integer getFatiqueLevel() {
@@ -217,8 +211,17 @@ public class SubjectivePerceptionRecovery implements Serializable {
 		this.type = type;
 	}
 
-	public Set<PainPoint> getPainPoints() {
+	public List<PainPoint> getPainPoints() {
 		return painPoints;
+	}
+	
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
+	}
+	
+	public void setPainPoints(List<PainPoint> update) {
+		this.painPoints = update;
+		
 	}
 
 	@Override
@@ -238,8 +241,12 @@ public class SubjectivePerceptionRecovery implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	public void setAthlete(Athlete entity) {
-		this.id = entity.getId();
+
+	public void setSubjectivePerceptionRecovery(Athlete entity) {
+		this.athlete = entity;
 	}
+
 	
+
+		
 }

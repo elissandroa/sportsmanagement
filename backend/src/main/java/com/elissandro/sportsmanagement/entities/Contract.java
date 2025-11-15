@@ -2,22 +2,22 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import com.elissandro.sportsmanagement.enums.ContractType;
+import com.elissandro.sportsmanagement.utils.Identifiable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_contract")
-public class Contract implements Serializable {
+public class Contract implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -31,8 +31,9 @@ public class Contract implements Serializable {
 	private String contractPdf;
 	private ContractType contractType;
 	
-	@ManyToMany(mappedBy = "contracts")
-	private Set<Athlete> athletes = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "athlete_id")
+	private Athlete athlete;
 	
 	public Contract() {
 	}
@@ -116,6 +117,10 @@ public class Contract implements Serializable {
 	public void setContractType(ContractType contractType) {
 		this.contractType = contractType;
 	}
+	
+	public void setAthlete(Athlete entity) {
+		this.athlete = entity;
+	}
 
 	@Override
 	public int hashCode() {
@@ -134,7 +139,8 @@ public class Contract implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	public void setAthlete(Athlete entity) {
-		this.athletes.add(entity);
+	public void setContract(Athlete entity) {
+		this.athlete = entity;
 	}
+
 }
