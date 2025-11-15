@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.elissandro.sportsmanagement.utils.Identifiable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_attendance")
-public class Attendance implements Serializable {
+public class Attendance implements Serializable, Identifiable<Long> {
 	private static final long serialVersionUID = 1L;
 	
 	@Id

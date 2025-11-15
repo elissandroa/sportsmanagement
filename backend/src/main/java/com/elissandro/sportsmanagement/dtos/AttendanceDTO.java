@@ -32,6 +32,15 @@ public class AttendanceDTO {
 		this.athleteId = entity.getAthleteId();
 	}
 
+	public Attendance toEntity() {
+		Attendance entity = new Attendance();
+		entity.setId(this.id);
+		entity.setPresent(this.present);
+		entity.setObservations(this.observations);
+		entity.setRecordedAt(this.recordedAt);
+		entity.setAthleteId(this.athleteId);
+		return entity;
+	}
 
 	public Long getId() {
 		return id;

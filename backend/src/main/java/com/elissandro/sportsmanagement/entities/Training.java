@@ -2,7 +2,9 @@ package com.elissandro.sportsmanagement.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -51,7 +53,7 @@ public class Training extends BaseEntityAudit implements Serializable {
 	private Set<Category> categories = new HashSet<>();
 	
 	@OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)	
-	private Set<Attendance> attendances = new HashSet<>();
+	private List<Attendance> attendances = new ArrayList<>();
 	
 	public Training() {
 	}
@@ -164,7 +166,7 @@ public class Training extends BaseEntityAudit implements Serializable {
 		return categories;
 	}
 
-	public Set<Attendance> getAttendances() {
+	public List<Attendance> getAttendances() {
 		return attendances;
 	}
 	

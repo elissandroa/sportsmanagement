@@ -1,6 +1,7 @@
 package com.elissandro.sportsmanagement.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.elissandro.sportsmanagement.dtos.AttendanceDTO;
 import com.elissandro.sportsmanagement.dtos.TrainingDTO;
 import com.elissandro.sportsmanagement.entities.Attendance;
-import com.elissandro.sportsmanagement.entities.Category;
 import com.elissandro.sportsmanagement.entities.Training;
 import com.elissandro.sportsmanagement.repositories.TrainingRepository;
 import com.elissandro.sportsmanagement.services.exceptions.DatabaseException;
 import com.elissandro.sportsmanagement.services.exceptions.ResourceNotFoundException;
+import com.elissandro.sportsmanagement.utils.ListUpdater;
 
 @Service
 public class TrainingService {
@@ -56,6 +57,7 @@ public class TrainingService {
 		if (dto.getId() != null) {
 			entity.setId(dto.getId());
 		}
+		
 		entity.setTrainingNumber(dto.getTrainingNumber());
 		entity.setDate(dto.getDate());
 		entity.setTime(dto.getTime());
@@ -66,28 +68,22 @@ public class TrainingService {
 		entity.setObjective(dto.getObjective());
 		entity.setScheduledBy(dto.getScheduledBy());
 		entity.setStatus(dto.getStatus());
+		
+		ListUpdater<Attendance> updater = new ListUpdater<>();
+
+		List<Attendance> updated = updater.update(entity.getAttendances(),
+				dto.getAttendances().stream().map(AttendanceDTO::toEntity).toList(), entity.getId(),
+				(editItem, newItem) -> {
+					editItem.setPresent(newItem.getPresent());
+					editItem.setObservations(newItem.getObservations());
+					editItem.setAthleteId(newItem.getAthleteId());
+					editItem.setRecordedAt(LocalDateTime.now());
+					editItem.setTraining(entity);
+				}, item -> item.setTraining(entity));
 
 		entity.getAttendances().clear();
-		for (AttendanceDTO attDto : dto.getAttendances()) {
-			var attendance = new Attendance();
-			if (attDto.getId() != null) {
-				attendance.setId(attDto.getId());
-			}
-			attendance.setPresent(attDto.getPresent());
-			attendance.setObservations(attDto.getObservations());
-			attendance.setRecordedAt(LocalDateTime.now());
-			attendance.setAthleteId(attDto.getAthleteId());
-			attendance.setTraining(entity);
-			entity.getAttendances().add(attendance);
-		}
-
-		entity.getCategories().clear();
-		dto.getCategories().forEach(catDto -> {
-			var category = new Category();
-			category.setId(catDto.getId());
-			entity.getCategories().add(category);
-		});
-
+		entity.getAttendances().addAll(updated);
+		
 	}
 
 	@Transactional
